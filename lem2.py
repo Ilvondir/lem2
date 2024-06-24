@@ -5,15 +5,15 @@ class LEM2:
 
     # -------------------------------------------------------------------
 
-    def check_rule_is_enough(self, data, T, B) -> bool:
+    def check_list_of_descriptors_is_enough(self, data, T, B) -> bool:
         
         """
-        Checks whether the rule is sufficient (certain or uncertain) on the data set and the selected decision class approximation.
+        Checks whether the list of descriptors is sufficient (certain or uncertain) on the data set and the selected decision class approximation.
         
         Params:
-            data: Decision system
-            T: Rule
-            B: Selected approximation of the decision class
+            data: Information system.
+            T: List of descriptors.
+            B: Selected approximation of the decision class.
             
         Return:
             bool: Information whether the rule is sufficient (certain or uncertain).
@@ -36,7 +36,18 @@ class LEM2:
 
     # -------------------------------------------------------------------
 
-    def objects_recognized_by_rule(self, data, rule):
+    def objects_recognized_by_rule(self, data, rule) -> list:
+        
+        """
+        Returns a list of indexes of objects recognized by a given rule from the information system.
+        
+        Params:
+            data: Information system.
+            rule: Rule.
+            
+        Return:
+            list: List of indexes of objects which that rule recognize.
+        """
         
         recognized_objects = []
         
@@ -54,7 +65,20 @@ class LEM2:
             
     # -------------------------------------------------------------------
 
-    def minimalize_rule(self, data, rule, B):
+    def minimalize_rule(self, data, rule, B) -> list:
+        
+        """
+        Minimizes the rule by removing unnecessary descriptors.
+        
+        Params:
+            data: Information system.
+            rule: Rule.
+            B: Selected approximation of the decision class.
+            
+        Return:
+            list: Minimalized rule.
+        """
+        
         filter_for_rule = []
         
         if len(rule) == 1: return rule
@@ -65,27 +89,38 @@ class LEM2:
             temp = rule.copy()
             temp.remove(descriptor)
             
-            verdict = self.check_rule_is_enough(data, temp, B)
+            verdict = self.check_set_of_descriptors_is_enough(data, temp, B)
             
             if verdict: filter_for_rule.append(False)
             else: filter_for_rule.append(True)
             
         new_rule = [rule[i] for i in range(len(rule)) if filter_for_rule[i]]
         
-        # print(f"Minimalized rule: {new_rule}")
-        
         return new_rule
 
     # -------------------------------------------------------------------
 
-    def label_coverage(self, data, labels, label_to_coverage, only_certain=True, verbose=1):
+    def label_coverage(self, data, labels, label_to_coverage, only_certain=True, verbose=1) -> list:
+        
+        """
+        Generates minimum coverage of the selected decision class using simple and minimal rules.
+        
+        Params:
+            data: Information system.
+            labels: Labels of objects.
+            label_to_coverage: Selected decision class to cover.
+            only_certain: Flag to indicate whether the algorithm should generate only certain rules.
+            verbose: Mode of generating messages by the learning process.
+            
+        Return:
+            list: Minimal coverage of selected decision class.
+        """
 
         # Remove nonunique rows with decisions
         data['label'] = labels
         data = data.drop_duplicates().reset_index().drop("index", axis=1)
         labels = data['label']
         data = data.drop('label', axis=1)
-        
         
         
         if verbose == 2: print(f"Optimalized data:\n{data}")
@@ -176,9 +211,9 @@ class LEM2:
             if verbose == 2: print(f"T = {T}")
             
             # Check is rule enough?
-            if verbose == 2:  print(f"Is rule enough? {self.check_rule_is_enough(data, T, B)}")
+            if verbose == 2:  print(f"Is rule enough? {self.check_set_of_descriptors_is_enough(data, T, B)}")
             
-            if self.check_rule_is_enough(data, T, B):
+            if self.check_set_of_descriptors_is_enough(data, T, B):
                 
                 # Minimalize enough rule
                 T = self.minimalize_rule(data, T, B)
@@ -245,7 +280,18 @@ class LEM2:
                     
     # -------------------------------------------------------------------
 
-    def remove_unnecessary_rules(self, data, rules):
+    def remove_unnecessary_rules(self, data, rules) -> list:
+        
+        """
+        Removes unnecessary rules.
+        
+        Params:
+            data: Information system.
+            rules: List of rules.
+            
+        Return:
+            list: List of necessary rules.
+        """
         
         coveraged_objects = []
         for rule in rules: coveraged_objects.append(self.objects_recognized_by_rule(data, rule))
@@ -272,7 +318,7 @@ class LEM2:
 
     # -------------------------------------------------------------------
 
-    def print_rules(self):
+    def print_rules(self) -> None:
         
         """
         Printing all inference rules fitted by the algorithm.
@@ -290,14 +336,14 @@ class LEM2:
             
     # -------------------------------------------------------------------
 
-    def fit(self, data, labels, only_certain=True, verbose=1):
+    def fit(self, data, labels, only_certain=True, verbose=1) -> list:
         
         """
         The learning process, i.e. generating minimal coverage of rules for each decision class.
         
         Params:
             data: Information system.
-            labels: Labels of objects
+            labels: Labels of objects.
             only_certain: A flag to indicate whether the algorithm should generate only certain rules.
             verbose: Mode of generating messages by the learning process.
             

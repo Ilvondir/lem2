@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Python: module lem2</title>
+    <link rel="stylesheet" href="_pydoc.css">
+</head>
+
+<body>
+
+    <table class="heading">
+        <tr class="heading-text decor">
+            <td class="title">&nbsp;<br><strong class="title">lem2</strong></td>
+            <td class="extra"><a href=".">index</a><br><a
+                    href="file:c%3A%5Cusers%5Cilvondir%5Cdesktop%5Clem2%5Clem2.py">c:\users\ilvondir\desktop\lem2\lem2.py</a>
+            </td>
+        </tr>
+    </table>
+    <p></p>
+    <p>
+    <table class="section">
+        <tr class="decor index-decor heading-text">
+            <td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td>
+        </tr>
+
+        <tr>
+            <td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+            <td>&nbsp;</td>
+            <td class="singlecolumn">
+                <dl>
+                    <dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+                    </dt>
+                    <dd>
+                        <dl>
+                            <dt class="heading-text"><a href="lem2.html#LEM2">LEM2</a>
+                            </dt>
+                        </dl>
+                    </dd>
+                </dl>
+                <p>
+                <table class="section">
+                    <tr class="decor title-decor heading-text">
+                        <td class="section-title" colspan=3>&nbsp;<br><a name="LEM2">class <strong>LEM2</strong></a>(<a
+                                href="builtins.html#object">builtins.object</a>)</td>
+                    </tr>
+
+                    <tr>
+                        <td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+                        <td class="decor title-decor" colspan=2><span class="code"><a
+                                    href="#LEM2">LEM2</a>()&nbsp;-&amp;gt;&nbsp;None<br>
+                                &nbsp;<br>
+                                <br>&nbsp;</span></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class="singlecolumn">Methods defined here:<br>
+                            <dl>
+                                <dt><a name="LEM2-__init__"><strong>__init__</strong></a>(self) -&gt; None</dt>
+                                <dd><span
+                                        class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a
+                                        name="LEM2-check_list_of_descriptors_is_enough"><strong>check_list_of_descriptors_is_enough</strong></a>(self,
+                                    data, T, B) -&gt; bool</dt>
+                                <dd><span
+                                        class="code">Checks&nbsp;whether&nbsp;the&nbsp;list&nbsp;of&nbsp;descriptors&nbsp;is&nbsp;sufficient&nbsp;(certain&nbsp;or&nbsp;uncertain)&nbsp;on&nbsp;the&nbsp;data&nbsp;set&nbsp;and&nbsp;the&nbsp;selected&nbsp;decision&nbsp;class&nbsp;approximation.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;T:&nbsp;List&nbsp;of&nbsp;descriptors.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;B:&nbsp;Selected&nbsp;approximation&nbsp;of&nbsp;the&nbsp;decision&nbsp;class.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;bool:&nbsp;Information&nbsp;whether&nbsp;the&nbsp;rule&nbsp;is&nbsp;sufficient&nbsp;(certain&nbsp;or&nbsp;uncertain).</span>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a name="LEM2-fit"><strong>fit</strong></a>(self, data, labels, only_certain=True,
+                                    verbose=1) -&gt; list</dt>
+                                <dd><span
+                                        class="code">The&nbsp;learning&nbsp;process,&nbsp;i.e.&nbsp;generating&nbsp;minimal&nbsp;coverage&nbsp;of&nbsp;rules&nbsp;for&nbsp;each&nbsp;decision&nbsp;class.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;labels:&nbsp;Labels&nbsp;of&nbsp;objects.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;only_certain:&nbsp;A&nbsp;flag&nbsp;to&nbsp;indicate&nbsp;whether&nbsp;the&nbsp;algorithm&nbsp;should&nbsp;generate&nbsp;only&nbsp;certain&nbsp;rules.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;List&nbsp;of&nbsp;rules,&nbsp;which&nbsp;will&nbsp;be&nbsp;saved&nbsp;in&nbsp;classifier.</span>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a name="LEM2-label_coverage"><strong>label_coverage</strong></a>(self, data,
+                                    labels, label_to_coverage, only_certain=True, verbose=1) -&gt; list</dt>
+                                <dd><span
+                                        class="code">Generates&nbsp;minimum&nbsp;coverage&nbsp;of&nbsp;the&nbsp;selected&nbsp;decision&nbsp;class&nbsp;using&nbsp;simple&nbsp;and&nbsp;minimal&nbsp;rules.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;labels:&nbsp;Labels&nbsp;of&nbsp;objects.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;label_to_coverage:&nbsp;Selected&nbsp;decision&nbsp;class&nbsp;to&nbsp;cover.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;only_certain:&nbsp;Flag&nbsp;to&nbsp;indicate&nbsp;whether&nbsp;the&nbsp;algorithm&nbsp;should&nbsp;generate&nbsp;only&nbsp;certain&nbsp;rules.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;Minimal&nbsp;coverage&nbsp;of&nbsp;selected&nbsp;decision&nbsp;class.</span>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a name="LEM2-minimalize_rule"><strong>minimalize_rule</strong></a>(self, data,
+                                    rule, B) -&gt; list</dt>
+                                <dd><span
+                                        class="code">Minimizes&nbsp;the&nbsp;rule&nbsp;by&nbsp;removing&nbsp;unnecessary&nbsp;descriptors.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;rule:&nbsp;Rule.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;B:&nbsp;Selected&nbsp;approximation&nbsp;of&nbsp;the&nbsp;decision&nbsp;class.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;Minimalized&nbsp;rule.</span></dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a
+                                        name="LEM2-objects_recognized_by_rule"><strong>objects_recognized_by_rule</strong></a>(self,
+                                    data, rule) -&gt; list</dt>
+                                <dd><span
+                                        class="code">Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;indexes&nbsp;of&nbsp;objects&nbsp;recognized&nbsp;by&nbsp;a&nbsp;given&nbsp;rule&nbsp;from&nbsp;the&nbsp;information&nbsp;system.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;rule:&nbsp;Rule.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;List&nbsp;of&nbsp;indexes&nbsp;of&nbsp;objects&nbsp;which&nbsp;that&nbsp;rule&nbsp;recognize.</span>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a name="LEM2-print_rules"><strong>print_rules</strong></a>(self) -&gt; None</dt>
+                                <dd><span
+                                        class="code">Printing&nbsp;all&nbsp;inference&nbsp;rules&nbsp;fitted&nbsp;by&nbsp;the&nbsp;algorithm.</span>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a
+                                        name="LEM2-remove_unnecessary_rules"><strong>remove_unnecessary_rules</strong></a>(self,
+                                    data, rules) -&gt; list</dt>
+                                <dd><span class="code">Removes&nbsp;unnecessary&nbsp;rules.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;rules:&nbsp;List&nbsp;of&nbsp;rules.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;List&nbsp;of&nbsp;necessary&nbsp;rules.</span>
+                                </dd>
+                            </dl>
+
+                            <hr>
+                            Data descriptors defined here:<br>
+                            <dl>
+                                <dt><strong>__dict__</strong></dt>
+                                <dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+                            </dl>
+                            <dl>
+                                <dt><strong>__weakref__</strong></dt>
+                                <dd><span
+                                        class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span>
+                                </dd>
+                            </dl>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
