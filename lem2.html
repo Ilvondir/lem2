@@ -20,6 +20,28 @@
     <p></p>
     <p>
     <table class="section">
+        <tr class="decor pkg-content-decor heading-text">
+            <td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td>
+        </tr>
+
+        <tr>
+            <td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+            <td>&nbsp;</td>
+            <td class="singlecolumn">
+                <table>
+                    <tr>
+                        <td class="multicolumn"><a href="pandas.html">pandas</a><br>
+                        </td>
+                        <td class="multicolumn"></td>
+                        <td class="multicolumn"></td>
+                        <td class="multicolumn"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <p>
+    <table class="section">
         <tr class="decor index-decor heading-text">
             <td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td>
         </tr>
@@ -65,7 +87,7 @@
                             <dl>
                                 <dt><a
                                         name="LEM2-check_list_of_descriptors_is_enough"><strong>check_list_of_descriptors_is_enough</strong></a>(self,
-                                    data, T, B) -&gt; bool</dt>
+                                    data: pandas.core.frame.DataFrame, T: list, B: list) -&gt; bool</dt>
                                 <dd><span
                                         class="code">Checks&nbsp;whether&nbsp;the&nbsp;list&nbsp;of&nbsp;descriptors&nbsp;is&nbsp;sufficient&nbsp;(certain&nbsp;or&nbsp;uncertain)&nbsp;on&nbsp;the&nbsp;data&nbsp;set&nbsp;and&nbsp;the&nbsp;selected&nbsp;decision&nbsp;class&nbsp;approximation.<br>
                                         &nbsp;<br>
@@ -80,8 +102,27 @@
                             </dl>
 
                             <dl>
-                                <dt><a name="LEM2-fit"><strong>fit</strong></a>(self, data, labels, only_certain=True,
-                                    verbose=1) -&gt; list</dt>
+                                <dt><a name="LEM2-evaluate"><strong>evaluate</strong></a>(self, data:
+                                    pandas.core.frame.DataFrame, labels: list, verbose=1) -&gt; tuple</dt>
+                                <dd><span
+                                        class="code">Calculates&nbsp;the&nbsp;accuracy&nbsp;metric&nbsp;for&nbsp;the&nbsp;prediction&nbsp;process.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;labels:&nbsp;Labels&nbsp;of&nbsp;objects.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;evaluating&nbsp;process.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;tuple:&nbsp;Tuple&nbsp;of&nbsp;metrics.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Raise:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;Data&nbsp;and&nbsp;labels&nbsp;must&nbsp;have&nbsp;same&nbsp;length.</span>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a name="LEM2-fit"><strong>fit</strong></a>(self, data: pandas.core.frame.DataFrame,
+                                    labels: list, only_certain=True, verbose=1) -&gt; list</dt>
                                 <dd><span
                                         class="code">The&nbsp;learning&nbsp;process,&nbsp;i.e.&nbsp;generating&nbsp;minimal&nbsp;coverage&nbsp;of&nbsp;rules&nbsp;for&nbsp;each&nbsp;decision&nbsp;class.<br>
                                         &nbsp;<br>
@@ -92,13 +133,17 @@
                                         &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         Return:<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;List&nbsp;of&nbsp;rules,&nbsp;which&nbsp;will&nbsp;be&nbsp;saved&nbsp;in&nbsp;classifier.</span>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;List&nbsp;of&nbsp;rules,&nbsp;which&nbsp;will&nbsp;be&nbsp;saved&nbsp;in&nbsp;classifier.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Raise:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;Data&nbsp;and&nbsp;labels&nbsp;must&nbsp;have&nbsp;same&nbsp;length.</span>
                                 </dd>
                             </dl>
 
                             <dl>
-                                <dt><a name="LEM2-label_coverage"><strong>label_coverage</strong></a>(self, data,
-                                    labels, label_to_coverage, only_certain=True, verbose=1) -&gt; list</dt>
+                                <dt><a name="LEM2-label_coverage"><strong>label_coverage</strong></a>(self, data:
+                                    pandas.core.frame.DataFrame, labels: list, label_to_coverage, only_certain=True,
+                                    verbose=1) -&gt; list</dt>
                                 <dd><span
                                         class="code">Generates&nbsp;minimum&nbsp;coverage&nbsp;of&nbsp;the&nbsp;selected&nbsp;decision&nbsp;class&nbsp;using&nbsp;simple&nbsp;and&nbsp;minimal&nbsp;rules.<br>
                                         &nbsp;<br>
@@ -110,13 +155,16 @@
                                         &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         Return:<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;Minimal&nbsp;coverage&nbsp;of&nbsp;selected&nbsp;decision&nbsp;class.</span>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;Minimal&nbsp;coverage&nbsp;of&nbsp;selected&nbsp;decision&nbsp;class.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Raise:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;Data&nbsp;and&nbsp;labels&nbsp;must&nbsp;have&nbsp;same&nbsp;length.</span>
                                 </dd>
                             </dl>
 
                             <dl>
-                                <dt><a name="LEM2-minimalize_rule"><strong>minimalize_rule</strong></a>(self, data,
-                                    rule, B) -&gt; list</dt>
+                                <dt><a name="LEM2-minimalize_rule"><strong>minimalize_rule</strong></a>(self, data:
+                                    pandas.core.frame.DataFrame, rule: list, B: list) -&gt; list</dt>
                                 <dd><span
                                         class="code">Minimizes&nbsp;the&nbsp;rule&nbsp;by&nbsp;removing&nbsp;unnecessary&nbsp;descriptors.<br>
                                         &nbsp;<br>
@@ -132,7 +180,7 @@
                             <dl>
                                 <dt><a
                                         name="LEM2-objects_recognized_by_rule"><strong>objects_recognized_by_rule</strong></a>(self,
-                                    data, rule) -&gt; list</dt>
+                                    data: pandas.core.frame.DataFrame, rule: list) -&gt; list</dt>
                                 <dd><span
                                         class="code">Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;indexes&nbsp;of&nbsp;objects&nbsp;recognized&nbsp;by&nbsp;a&nbsp;given&nbsp;rule&nbsp;from&nbsp;the&nbsp;information&nbsp;system.<br>
                                         &nbsp;<br>
@@ -146,6 +194,39 @@
                             </dl>
 
                             <dl>
+                                <dt><a name="LEM2-predict"><strong>predict</strong></a>(self, data:
+                                    pandas.core.frame.DataFrame, verbose=1) -&gt; list</dt>
+                                <dd><span
+                                        class="code">Predicts&nbsp;classes&nbsp;for&nbsp;all&nbsp;objects&nbsp;in&nbsp;the&nbsp;passed&nbsp;data&nbsp;frame.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;predicting&nbsp;process.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;List&nbsp;of&nbsp;predicted&nbsp;classes.</span>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a name="LEM2-predict_object_class"><strong>predict_object_class</strong></a>(self,
+                                    object: dict, rules: list, verbose=1)</dt>
+                                <dd><span class="code">Predict&nbsp;a&nbsp;class&nbsp;on&nbsp;the&nbsp;selected&nbsp;<a
+                                            href="builtins.html#object">object</a>.&nbsp;In&nbsp;case&nbsp;of&nbsp;conflict,&nbsp;it&nbsp;selects&nbsp;the&nbsp;first&nbsp;decision&nbsp;class&nbsp;found.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<a
+                                            href="builtins.html#object">object</a>:&nbsp;Object&nbsp;passed&nbsp;as&nbsp;a&nbsp;dictionary&nbsp;that&nbsp;must&nbsp;contain&nbsp;all&nbsp;fields&nbsp;from&nbsp;the&nbsp;training&nbsp;set.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;rules:&nbsp;List&nbsp;of&nbsp;rules.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;predicting&nbsp;process.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;Decision&nbsp;class&nbsp;or&nbsp;None&nbsp;if&nbsp;no&nbsp;match&nbsp;is&nbsp;found.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;bool:&nbsp;Flag&nbsp;indicating&nbsp;that&nbsp;a&nbsp;conflict&nbsp;occurred&nbsp;while&nbsp;predicting&nbsp;the&nbsp;class&nbsp;for&nbsp;this&nbsp;<a
+                                            href="builtins.html#object">object</a>.</span></dd>
+                            </dl>
+
+                            <dl>
                                 <dt><a name="LEM2-print_rules"><strong>print_rules</strong></a>(self) -&gt; None</dt>
                                 <dd><span
                                         class="code">Printing&nbsp;all&nbsp;inference&nbsp;rules&nbsp;fitted&nbsp;by&nbsp;the&nbsp;algorithm.</span>
@@ -155,7 +236,7 @@
                             <dl>
                                 <dt><a
                                         name="LEM2-remove_unnecessary_rules"><strong>remove_unnecessary_rules</strong></a>(self,
-                                    data, rules) -&gt; list</dt>
+                                    data: pandas.core.frame.DataFrame, rules: list) -&gt; list</dt>
                                 <dd><span class="code">Removes&nbsp;unnecessary&nbsp;rules.<br>
                                         &nbsp;<br>
                                         Params:<br>
