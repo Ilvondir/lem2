@@ -1,4 +1,4 @@
-from collections import Counter
+import pandas as pd
 
 class LEM2:
     
@@ -7,7 +7,7 @@ class LEM2:
 
     # -------------------------------------------------------------------
 
-    def check_list_of_descriptors_is_enough(self, data, T, B) -> bool:
+    def check_list_of_descriptors_is_enough(self, data: pd.DataFrame, T: list, B:list ) -> bool:
         
         """
         Checks whether the list of descriptors is sufficient (certain or uncertain) on the data set and the selected decision class approximation.
@@ -38,7 +38,7 @@ class LEM2:
 
     # -------------------------------------------------------------------
 
-    def objects_recognized_by_rule(self, data, rule) -> list:
+    def objects_recognized_by_rule(self, data: pd.DataFrame, rule: list) -> list:
         
         """
         Returns a list of indexes of objects recognized by a given rule from the information system.
@@ -67,7 +67,7 @@ class LEM2:
             
     # -------------------------------------------------------------------
 
-    def minimalize_rule(self, data, rule, B) -> list:
+    def minimalize_rule(self, data: pd.DataFrame, rule: list, B: list) -> list:
         
         """
         Minimizes the rule by removing unnecessary descriptors.
@@ -102,7 +102,7 @@ class LEM2:
 
     # -------------------------------------------------------------------
 
-    def label_coverage(self, data, labels, label_to_coverage, only_certain=True, verbose=1) -> list:
+    def label_coverage(self, data: pd.DataFrame, labels: list, label_to_coverage, only_certain=True, verbose=1) -> list:
         
         """
         Generates minimum coverage of the selected decision class using simple and minimal rules.
@@ -116,7 +116,14 @@ class LEM2:
             
         Return:
             list: Minimal coverage of selected decision class.
+            
+        Raise:
+            ValueError: Data and labels must have same length.
         """
+    
+        
+        if len(data) != len(labels):
+            raise ValueError("Data and labels must have same length.")
 
         # Remove nonunique rows with decisions
         data['label'] = labels
@@ -282,7 +289,7 @@ class LEM2:
                     
     # -------------------------------------------------------------------
 
-    def remove_unnecessary_rules(self, data, rules) -> list:
+    def remove_unnecessary_rules(self, data: pd.DataFrame, rules: list) -> list:
         
         """
         Removes unnecessary rules.
@@ -338,7 +345,7 @@ class LEM2:
             
     # -------------------------------------------------------------------
 
-    def fit(self, data, labels, only_certain=True, verbose=1) -> list:
+    def fit(self, data: pd.DataFrame, labels: list, only_certain=True, verbose=1) -> list:
         
         """
         The learning process, i.e. generating minimal coverage of rules for each decision class.
@@ -351,7 +358,13 @@ class LEM2:
             
         Return:
             list: List of rules, which will be saved in classifier.
+            
+        Raise:
+            ValueError: Data and labels must have same length.
         """
+        
+        if len(data) != len(labels):
+            raise ValueError("Data and labels must have same length.")
         
         all_labels = labels.unique()
         rules = []
@@ -432,7 +445,18 @@ class LEM2:
         
     # -------------------------------------------------------------------
     
-    def predict(self, data, verbose=1) -> list:
+    def predict(self, data: pd.DataFrame, verbose=1) -> list:
+        
+        """
+        Predicts classes for all objects in the passed data frame.
+        
+        Params:
+            data: Information system.
+            verbose: Mode of generating messages by the predicting process.
+            
+        Return:
+            list: List of predicted classes.
+        """
             
         classes = []
         conflicts_counter = 0
@@ -457,10 +481,32 @@ class LEM2:
         
     # --------------------------------------------------------------------
     
-    def evaluate(self, data, labels) -> tuple:
+    def evaluate(self, data: pd.DataFrame, labels: list, verbose=1) -> tuple:
+        
+        """
+        Calculates the accuracy metric for the prediction process.
+        
+        Params:
+            data: Information system.
+            labels: Labels of objects.
+            verbose: Mode of generating messages by the evaluating process.
+            
+        Return:
+            tuple: Tuple of metrics.
+            
+        Raise:
+            ValueError: Data and labels must have same length.
+        """
+        
+        if len(data) != len(labels):
+            raise ValueError("Data and labels must have same length.")
         
         preds = self.predict(data, verbose=0)
         
         errors_counter = sum([labels[i] != preds[i] for i in range(len(preds))])
         
-        return ('accuracy', (len(labels)-errors_counter)/(len(labels)))
+        accuracy = float(len(labels)-errors_counter)/(len(labels))
+        
+        if verbose > 0: print(f"Accuracy of evaluate: {accuracy}")
+        
+        return ('accuracy', accuracy)
