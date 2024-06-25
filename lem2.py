@@ -283,7 +283,8 @@ class LEM2:
         # Remove unnecessary rules
         self.remove_unnecessary_rules(data, rules)
         
-                
+        if verbose > 0: print(f"\tNext {counter} iteration", end="")
+                        
         # Return rules for selected label
         return rules
                     
