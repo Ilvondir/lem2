@@ -1,4 +1,5 @@
 import pandas as pd
+import sys
 
 class LEM2:
     
@@ -127,12 +128,12 @@ class LEM2:
 
         # Remove nonunique rows with decisions
         data['label'] = labels
-        data = data.drop_duplicates().reset_index().drop("index", axis=1)
+        data = data.drop_duplicates().reset_index(drop=True)
+        
+        if verbose == 2: print(f"\nOptimalized data:\n{data}")
+        
         labels = data['label']
         data = data.drop('label', axis=1)
-        
-        
-        if verbose == 2: print(f"Optimalized data:\n{data}")
         
         rules = []
 
@@ -227,6 +228,8 @@ class LEM2:
                 # Minimalize enough rule
                 T = self.minimalize_rule(data, T, B)
                 
+                if verbose == 2: print(f"Rule after minimalization: {T}")
+                
                 # Add new rule
                 rules.append(T)
                 T = []
@@ -283,7 +286,7 @@ class LEM2:
         # Remove unnecessary rules
         self.remove_unnecessary_rules(data, rules)
         
-        if verbose > 0: print(f"\tNext {counter} iteration", end="")
+        if verbose > 0: print(f"Coveraged in {counter} iterations")
                         
         # Return rules for selected label
         return rules
@@ -333,16 +336,19 @@ class LEM2:
         """
         Printing all inference rules fitted by the algorithm.
         """
-        
+        counter = 1
         for rule in self.rules:
+            print(f"{counter}) ", end="")
+            
             for index in range(len(rule)):
-                
+                            
                 print(f"'{rule[index][0]}={rule[index][1]}' ", end="")
                 
                 if index != len(rule)-1:
                     print("&& ", end="")
             
             print(f"=> 'label={rule[0][2]}'")
+            counter += 1
             
     # -------------------------------------------------------------------
 
@@ -371,14 +377,19 @@ class LEM2:
         rules = []
         
         if verbose > 0:
-                print(f"\nFit process:")
+                print(f"\nTrain process:")
         
         for index in range(len(all_labels)):
+            
+            if verbose > 0:
+                print(f"\t{index+1}/{len(all_labels)} label ({all_labels[index]})", end="\t")
+                sys.stdout.flush()
+
+                
             rule_for_label = self.label_coverage(data, labels, label_to_coverage=all_labels[index], only_certain=only_certain, verbose=verbose)
             rules.extend(rule_for_label)
             
-            if verbose > 0:
-                print(f"\t{index+1}/{len(all_labels)} labels coveraged")
+            
             
         if verbose > 0:
                 print()

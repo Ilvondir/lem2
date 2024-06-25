@@ -8,13 +8,13 @@ import pandas as pd
 #     "label": [0, 0, 0, 0, 0, 1, 1, 1, 1]
 # }, dtype=int)
 
-# data = pd.read_csv("./patient_statistics_discretized.csv").rename(columns={"Has_Disease": "label"})
+data = pd.read_csv("./patient_statistics_discretized.csv").rename(columns={"Has_Disease": "label"})
 
-data = pd.DataFrame({
-    "a": [0, 0, 1, 1, 1],
-    "b": [0, 1, 0, 1, 1],
-    "label": [0, 1, 1, 0, 1]
-}, dtype=int)
+# data = pd.DataFrame({
+#     "a": [0, 0, 1, 1, 1],
+#     "b": [0, 1, 0, 1, 1],
+#     "label": [0, 1, 1, 0, 1]
+# }, dtype=int)
 
 # test_data = pd.DataFrame({
 #     "a": [2, 1],
@@ -22,12 +22,13 @@ data = pd.DataFrame({
 #     "label": [1, 0],
 # }, dtype=int)
 
+lem2 = LEM2()
+lem2.fit(data.drop('label', axis=1), data['label'], only_certain=True)
 
-classifier = LEM2()
-classifier.fit(data.drop('label', axis=1), data['label'], only_certain=False)
+# lem2.print_rules()
 
-eval = classifier.evaluate(data.drop('label', axis=1), data["label"])
+# lem2.evaluate(data.drop('label', axis=1), data['label'])
 
-data['preds'] = classifier.predict(data.drop('label', axis=1), verbose=0)
+data['preds'] = lem2.predict(data)
 
-print(f"\n\n{data}" )
+lem2.predict_object_class(data.iloc[43].to_dict(), lem2.rules, verbose=2)
