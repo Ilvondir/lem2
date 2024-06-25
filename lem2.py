@@ -1,3 +1,5 @@
+from collections import Counter
+
 class LEM2:
     
     def __init__(self) -> None:
@@ -89,7 +91,7 @@ class LEM2:
             temp = rule.copy()
             temp.remove(descriptor)
             
-            verdict = self.check_set_of_descriptors_is_enough(data, temp, B)
+            verdict = self.check_list_of_descriptors_is_enough(data, temp, B)
             
             if verdict: filter_for_rule.append(False)
             else: filter_for_rule.append(True)
@@ -211,9 +213,9 @@ class LEM2:
             if verbose == 2: print(f"T = {T}")
             
             # Check is rule enough?
-            if verbose == 2:  print(f"Is rule enough? {self.check_set_of_descriptors_is_enough(data, T, B)}")
+            if verbose == 2:  print(f"Is rule enough? {self.check_list_of_descriptors_is_enough(data, T, B)}")
             
-            if self.check_set_of_descriptors_is_enough(data, T, B):
+            if self.check_list_of_descriptors_is_enough(data, T, B):
                 
                 # Minimalize enough rule
                 T = self.minimalize_rule(data, T, B)
@@ -370,3 +372,86 @@ class LEM2:
         self.rules = rules
         
         return rules
+    
+    # -------------------------------------------------------------------
+    
+    def predict_object_class(self, object: dict, rules: list, verbose=1):
+        
+        """
+        Predict a class on the selected object. In case of conflict, it selects the first decision class found.
+        
+        Params:
+            object: Object passed as a dictionary that must contain all fields from the training set.
+            rules: List of rules.
+            verbose: Mode of generating messages by the predicting process.
+            
+        Return:
+            Decision class or None if no match is found.
+            bool: Flag indicating that a conflict occurred while predicting the class for this object.
+        """
+        
+        predicted_classes = []
+        
+        # Get all predicted classes for object
+        for rule in rules:
+            is_recognized_by_rule = True
+            
+            for descriptor in rule:
+                if object[descriptor[0]] != descriptor[1]:
+                    is_recognized_by_rule = False
+                    
+            if is_recognized_by_rule: predicted_classes.append(rule[0][2])
+            
+        if verbose == 2: print(f"Classes for object {object}: {predicted_classes}")
+        
+        # If no rules return None
+        if len(predicted_classes) == 0: 
+            if verbose == 2: print(f"Class for {object}: {None}")
+            return None, False
+        
+        # Search most common decision  
+        set_of_classes = set(predicted_classes)
+        counts = []
+        
+        for elem in set_of_classes:
+            counts.append(predicted_classes.count(elem))
+        
+                         
+        max_count = max(counts)
+        
+        is_conflict = False
+        if (counts.count(max_count) > 1):
+            is_conflict = True
+        
+        
+        for i in range(len(counts)):
+            if max_count == counts[i]:
+                
+                if verbose == 2: print(f"Class for {object}: {list(set_of_classes)[i]}")
+                return list(set_of_classes)[i], is_conflict
+        
+    # -------------------------------------------------------------------
+    
+    def predict(self, data, verbose=1) -> list:
+            
+        classes = []
+        conflicts_counter = 0
+        
+        if verbose > 0: print(f"Objects to predict: {len(data)}")
+        
+        for i in range(len(data)):
+            predict_class, is_conflict = self.predict_object_class(data.iloc[i].to_dict(), self.rules, verbose=verbose)
+            classes.append(predict_class)
+            
+            if is_conflict: conflicts_counter += 1
+            
+            if verbose > 0: print(f"\t{i+1}/{len(data)} classes predicted")
+            
+        
+        if verbose > 0: print(f"During the prediction, {conflicts_counter} conflicts occurred.")
+        if verbose == 2: print(f"All predicted classes: {classes}")
+        
+        if verbose > 0: print()
+        
+        return classes       
+        
