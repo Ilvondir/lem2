@@ -23,10 +23,8 @@ data = pd.read_csv("./patient_statistics_discretized.csv").rename(columns={"Has_
 
 
 classifier = LEM2()
-classifier.fit(data.drop('label', axis=1), labels=data['label'], only_certain=True)
+classifier.fit(data.drop('label', axis=1), labels=data['label'], only_certain=False)
 
-preds = classifier.predict(data, verbose=1)
+eval = classifier.evaluate(data, labels=data['label'])
 
-data['preds'] = preds
-
-print(data)
+print(eval)

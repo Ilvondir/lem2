@@ -47,5 +47,6 @@ Age,Weight,Blood_Pressure,Cholesterol_Level,Smoker,Exercise_Level,Has_Disease
 60-69,80-89,100-109,230-249,Yes,Medium,No
 30-39,60-69,140-149,190-209,Yes,Medium,No
 60-69,60-69,100-109,230-249,No,Low,No
-20-29,100+,110-119,230-249,Yes,Medium,No
+20-29,100+,110-119,230-249,Yes,Medium,Yes
 40-49,100+,110-119,230-249,No,Low,Yes
+40-49,100+,110-119,230-249,Yes,Low,Yes

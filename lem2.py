@@ -455,3 +455,12 @@ class LEM2:
         
         return classes       
         
+    # --------------------------------------------------------------------
+    
+    def evaluate(self, data, labels) -> tuple:
+        
+        preds = self.predict(data, verbose=0)
+        
+        errors_counter = sum([labels[i] != preds[i] for i in range(len(preds))])
+        
+        return ('accuracy', (len(labels)-errors_counter)/(len(labels)))
