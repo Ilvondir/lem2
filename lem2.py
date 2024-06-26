@@ -86,10 +86,12 @@ class LEM2:
         
         if len(rule) == 1: return rule
         
+        
+        temp = rule.copy()
+        
             
         # Check that descriptors are necessary
         for descriptor in rule:
-            temp = rule.copy()
             temp.remove(descriptor)
             
             verdict = self.check_list_of_descriptors_is_enough(data, temp, B)

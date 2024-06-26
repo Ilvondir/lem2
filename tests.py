@@ -23,12 +23,16 @@ data = pd.read_csv("./patient_statistics_discretized.csv").rename(columns={"Has_
 # }, dtype=int)
 
 lem2 = LEM2()
-lem2.fit(data.drop('label', axis=1), data['label'], only_certain=True)
+lem2.fit(data.drop('label', axis=1), data['label'], only_certain=True, verbose=1)
+lem2.evaluate(data.drop('label', axis=1), data['label'])
+
 
 # lem2.print_rules()
 
 # lem2.evaluate(data.drop('label', axis=1), data['label'])
 
-data['preds'] = lem2.predict(data)
+# data['preds'] = lem2.predict(data, verbose=0)
 
-lem2.predict_object_class(data.iloc[43].to_dict(), lem2.rules, verbose=2)
+# print(data)
+
+# lem2.predict_object_class(data.iloc[43].to_dict(), lem2.rules, verbose=2)
