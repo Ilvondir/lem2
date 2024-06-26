@@ -474,6 +474,7 @@ class LEM2:
             
         classes = []
         conflicts_counter = 0
+        none_counter = 0
         
         if verbose > 0: print(f"Objects to predict: {len(data)}")
         
@@ -482,11 +483,14 @@ class LEM2:
             classes.append(predict_class)
             
             if is_conflict: conflicts_counter += 1
+            if predict_class == None: none_counter += 1
             
-            if verbose > 0: print(f"\t{i+1}/{len(data)} classes predicted")
+            if verbose == 2: print(f"\t{i+1}/{len(data)} classes predicted")
             
         
         if verbose > 0: print(f"During the prediction, {conflicts_counter} conflicts occurred.")
+        if verbose > 0: print(f"The prediction process included {none_counter} objects whose class could not be predicted.")
+        
         if verbose == 2: print(f"All predicted classes: {classes}")
         
         if verbose > 0: print()
@@ -515,7 +519,7 @@ class LEM2:
         if len(data) != len(labels):
             raise ValueError("Data and labels must have same length.")
         
-        preds = self.predict(data, verbose=0)
+        preds = self.predict(data, verbose=verbose)
         
         errors_counter = sum([labels[i] != preds[i] for i in range(len(preds))])
         

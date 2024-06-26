@@ -24,7 +24,8 @@ data = pd.read_csv("./patient_statistics_discretized.csv").rename(columns={"Has_
 
 lem2 = LEM2()
 lem2.fit(data.drop('label', axis=1), data['label'], only_certain=True, verbose=1)
-lem2.evaluate(data.drop('label', axis=1), data['label'])
+# lem2.evaluate(data.drop('label', axis=1), data['label'])
+lem2.predict(data)
 
 
 # lem2.print_rules()

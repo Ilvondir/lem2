@@ -39,36 +39,36 @@ def discretization(x, column, number_of_groups):
     
     for i in range(number_of_groups):
         if cuts[i] <= x < cuts[i+1]:
-            return i+1
+            return f"{cuts[i]}-{cuts[i+1]}"
         
-    return number_of_groups
+    return f"{cuts[i]}-{cuts[i+1]}"
 
 discretized_data = data.copy()
 
 for column in ['age', 'trestbps', 'chol','thalach', 'oldpeak']:
-    discretized_data[column] = discretized_data[column].apply(lambda x: discretization(x, column, 5))
+    discretized_data[column] = discretized_data[column].apply(lambda x: discretization(x, column, 2))
+
+    
+# print(data)
+# print(discretized_data)
+# print(discretized_data['label'].value_counts())
     
 
 discretized_data['label'] = labels
-test_data = discretized_data.sample(n=150).reset_index(drop=True)
+test_data = discretized_data.sample(n=200).reset_index(drop=True)
 train_data = discretized_data.drop(test_data.index).reset_index(drop=True)
 
-# print(labels)
+# print(train_data['label'].value_counts())
 
-# print(discretized_data)
-
-
-# Classifier
+# # Classifier
 lem2_classifier = LEM2()
-lem2_classifier.fit(train_data.drop('label', axis=1), train_data['label'], only_certain=True)
+lem2_classifier.fit(train_data.drop('label', axis=1), train_data['label'], only_certain=False)
 
 # lem2_classifier.print_rules()
 
-print("Train data: ")
+print("\n\nTrain data: ")
 lem2_classifier.evaluate(train_data.drop('label', axis=1), train_data['label'])
 # train_data['preds'] = lem2_classifier.predict(train_data.drop('label', axis=1), verbose=0)
 
-print("Test data: ")
+print("\n\nTest data: ")
 lem2_classifier.evaluate(test_data.drop('label', axis=1), test_data['label'])
-
-# print(train_data)
