@@ -5,6 +5,7 @@ class LEM2:
     
     def __init__(self) -> None:
         self.rules = []
+        self.label_counts_ranking = []
 
     # -------------------------------------------------------------------
 
@@ -376,6 +377,23 @@ class LEM2:
             raise ValueError("Data and labels must have same length.")
         
         all_labels = labels.unique()
+        
+        labels_with_counts = dict()
+        
+        
+        # Create ranking for labels (in proediction conflict will be selected most common class)
+        for label in all_labels:
+            number = list(labels).count(label)
+            labels_with_counts[label] = number
+            
+        sorted_labels_with_counts = sorted(labels_with_counts.items(), key=lambda x: x[1])
+        
+        for key, value in sorted_labels_with_counts:
+            self.label_counts_ranking.insert(0, key)
+            
+        if verbose == 2: print(f"Labels ranking: {self.label_counts_ranking}")
+            
+        # Training process
         rules = []
         
         if verbose > 0:
@@ -449,13 +467,36 @@ class LEM2:
         is_conflict = False
         if (counts.count(max_count) > 1):
             is_conflict = True
+            
+        conflicted_classes = []
         
         
         for i in range(len(counts)):
-            if max_count == counts[i]:
+            
+            if not is_conflict:
+                if max_count == counts[i]:
+                    
+                    if verbose == 2: print(f"Class for {object}: {list(set_of_classes)[i]}")
+                    
+                    return list(set_of_classes)[i], is_conflict
                 
-                if verbose == 2: print(f"Class for {object}: {list(set_of_classes)[i]}")
-                return list(set_of_classes)[i], is_conflict
+            if is_conflict:
+                if max_count == counts[i]:
+                    conflicted_classes.append(list(set_of_classes)[i])
+        
+        
+        # If conflict, select most popular label from train data
+        positions_in_ranking = []
+        for label in conflicted_classes: positions_in_ranking.append(self.label_counts_ranking.index(label))
+        
+        best_position = min(positions_in_ranking)
+        
+        for i in range(len(positions_in_ranking)):
+            if positions_in_ranking[i] == best_position:
+                
+                if verbose == 2: print(f"Class for {object}: {conflicted_classes[i]}")
+                    
+                return conflicted_classes[i], is_conflict
         
     # -------------------------------------------------------------------
     
@@ -476,7 +517,7 @@ class LEM2:
         conflicts_counter = 0
         none_counter = 0
         
-        if verbose > 0: print(f"Objects to predict: {len(data)}")
+        if verbose == 2: print(f"Objects to predict: {len(data)}")
         
         for i in range(len(data)):
             predict_class, is_conflict = self.predict_object_class(data.iloc[i].to_dict(), self.rules, verbose=verbose)
@@ -518,7 +559,7 @@ class LEM2:
         
         if len(data) != len(labels):
             raise ValueError("Data and labels must have same length.")
-        
+                
         preds = self.predict(data, verbose=verbose)
         
         errors_counter = sum([labels[i] != preds[i] for i in range(len(preds))])
