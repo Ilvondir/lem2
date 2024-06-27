@@ -45,12 +45,13 @@ class Discretizer:
             cuts = []
         
             
-            for i in range(number_of_output_values+1):
+            for i in range(number_of_output_values):
                 cuts.append(min_value + step*i)
+            cuts.append(max_value)
                 
             self.cuts[column] = cuts
             
-        if verbose > 0: print(f"All learned cuts: {self.cuts}")
+        if verbose > 0: print(f"\nAll learned cuts: {self.cuts}\n")
         
             
     
@@ -86,8 +87,9 @@ class Discretizer:
             cuts = []
         
             
-            for i in range(number_of_output_values+1):
+            for i in range(number_of_output_values):
                 cuts.append(min_value + step*i)
+            cuts.append(max_value)
                 
             self.cuts[column] = cuts
                         
@@ -102,11 +104,11 @@ class Discretizer:
                         is_discretized = True
                         break
                         
-                if not is_discretized: new_values.append(f"{cuts[j]}-{cuts[j+1]}")
+                if not is_discretized and data[column][i] == self.cuts[column][-1]: new_values.append(f"{cuts[j]}-{cuts[j+1]}")
                     
             my_data[column] = new_values
             
-        if verbose > 0: print(f"All learned cuts: {self.cuts}")
+        if verbose > 0: print(f"\nAll learned cuts: {self.cuts}\n")
                     
         return my_data
     
@@ -140,7 +142,10 @@ class Discretizer:
                         is_discretized = True
                         break
                         
-                if not is_discretized: new_values.append(f"{self.cuts[column][j]}-{self.cuts[column][j+1]}")
+                if not is_discretized:
+                    if data[column][i] == self.cuts[column][-1]: new_values.append(f"{self.cuts[column][j]}-{self.cuts[column][j+1]}")
+                    if data[column][i] < self.cuts[column][0]: new_values.append(f"<{self.cuts[column][0]}")
+                    if data[column][i] > self.cuts[column][-1]: new_values.append(f">{self.cuts[column][-1]}")
         
             my_data[column] = new_values
                     
