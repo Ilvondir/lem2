@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Python: module discretizer</title>
+    <link rel="stylesheet" href="_pydoc.css">
+</head>
+
+<body>
+
+    <table class="heading">
+        <tr class="heading-text decor">
+            <td class="title">&nbsp;<br><strong class="title">discretizer</strong></td>
+            <td class="extra"><a href=".">index</a><br><a
+                    href="file:c%3A%5Cusers%5Cilvondir%5Cdesktop%5Clem2%5Cdiscretizer.py">c:\users\ilvondir\desktop\lem2\discretizer.py</a>
+            </td>
+        </tr>
+    </table>
+    <p></p>
+    <p>
+    <table class="section">
+        <tr class="decor pkg-content-decor heading-text">
+            <td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td>
+        </tr>
+
+        <tr>
+            <td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+            <td>&nbsp;</td>
+            <td class="singlecolumn">
+                <table>
+                    <tr>
+                        <td class="multicolumn"><a href="pandas.html">pandas</a><br>
+                        </td>
+                        <td class="multicolumn"></td>
+                        <td class="multicolumn"></td>
+                        <td class="multicolumn"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <p>
+    <table class="section">
+        <tr class="decor index-decor heading-text">
+            <td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td>
+        </tr>
+
+        <tr>
+            <td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+            <td>&nbsp;</td>
+            <td class="singlecolumn">
+                <dl>
+                    <dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+                    </dt>
+                    <dd>
+                        <dl>
+                            <dt class="heading-text"><a href="discretizer.html#Discretizer">Discretizer</a>
+                            </dt>
+                        </dl>
+                    </dd>
+                </dl>
+                <p>
+                <table class="section">
+                    <tr class="decor title-decor heading-text">
+                        <td class="section-title" colspan=3>&nbsp;<br><a name="Discretizer">class
+                                <strong>Discretizer</strong></a>(<a href="builtins.html#object">builtins.object</a>)
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+                        <td class="decor title-decor" colspan=2><span class="code"><a
+                                    href="#Discretizer">Discretizer</a>&nbsp;is&nbsp;a&nbsp;class&nbsp;representing&nbsp;a&nbsp;discretizer&nbsp;that&nbsp;uses&nbsp;an&nbsp;unsupervised&nbsp;approach.<br>
+                                &nbsp;<br>
+                                Attributes:<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;cuts:&nbsp;Dictionary&nbsp;storing&nbsp;all&nbsp;learned&nbsp;cuts&nbsp;on&nbsp;all&nbsp;data&nbsp;columns.<br>&nbsp;</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td class="singlecolumn">Methods defined here:<br>
+                            <dl>
+                                <dt><a name="Discretizer-__init__"><strong>__init__</strong></a>(self)</dt>
+                                <dd><span class="code">Initializes&nbsp;the&nbsp;Discretezer&nbsp;<a
+                                            href="builtins.html#object">object</a>.</span></dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a name="Discretizer-discretize"><strong>discretize</strong></a>(self, data:
+                                    pandas.core.frame.DataFrame, attributes: list) -&gt; pandas.core.frame.DataFrame
+                                </dt>
+                                <dd><span class="code">Discretizes&nbsp;selected&nbsp;attributes.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;attributes:&nbsp;List&nbsp;of&nbsp;attributes&nbsp;to&nbsp;discretize.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;DataFrame:&nbsp;Discretized&nbsp;data.</span></dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a name="Discretizer-fit"><strong>fit</strong></a>(self, data:
+                                    pandas.core.frame.DataFrame, attributes: list, number_of_output_values: int,
+                                    verbose=0) -&gt; None</dt>
+                                <dd><span
+                                        class="code">Fits&nbsp;discretizer,&nbsp;i.e.&nbsp;generates&nbsp;cuts&nbsp;that&nbsp;the&nbsp;discretizer&nbsp;<a
+                                            href="builtins.html#object">object</a>&nbsp;will&nbsp;remember.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;attributes:&nbsp;List&nbsp;of&nbsp;attributes&nbsp;to&nbsp;discretize.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;number_of_output_value:&nbsp;The&nbsp;number&nbsp;of&nbsp;values&nbsp;the&nbsp;attribute&nbsp;can&nbsp;has&nbsp;after&nbsp;discretization.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
+                                        &nbsp;<br>
+                                        Raise:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;Number&nbsp;of&nbsp;output&nbsp;values&nbsp;must&nbsp;be&nbsp;greater&nbsp;than&nbsp;0.</span>
+                                </dd>
+                            </dl>
+
+                            <dl>
+                                <dt><a name="Discretizer-fit_discretize"><strong>fit_discretize</strong></a>(self, data:
+                                    pandas.core.frame.DataFrame, attributes: list, number_of_output_values: int,
+                                    verbose=0) -&gt; pandas.core.frame.DataFrame</dt>
+                                <dd><span
+                                        class="code">Fits&nbsp;discretizer&nbsp;and&nbsp;discretizes&nbsp;selected&nbsp;attributes.<br>
+                                        &nbsp;<br>
+                                        Params:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;attributes:&nbsp;List&nbsp;of&nbsp;attributes&nbsp;to&nbsp;discretize.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;number_of_output_value:&nbsp;The&nbsp;number&nbsp;of&nbsp;values&nbsp;the&nbsp;attribute&nbsp;can&nbsp;has&nbsp;after&nbsp;discretization.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                                        Return:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;DataFrame:&nbsp;Discretized&nbsp;data.<br>
+                                        &nbsp;<br>
+                                        Raise:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;Number&nbsp;of&nbsp;output&nbsp;values&nbsp;must&nbsp;be&nbsp;greater&nbsp;than&nbsp;0.</span>
+                                </dd>
+                            </dl>
+
+                            <hr>
+                            Data descriptors defined here:<br>
+                            <dl>
+                                <dt><strong>__dict__</strong></dt>
+                                <dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+                            </dl>
+                            <dl>
+                                <dt><strong>__weakref__</strong></dt>
+                                <dd><span
+                                        class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span>
+                                </dd>
+                            </dl>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

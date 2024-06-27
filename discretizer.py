@@ -1,11 +1,40 @@
 import pandas as pd
 
 class Discretizer:
+    
+    """
+    Discretizer is a class representing a discretizer that uses an unsupervised approach.
+    
+    Attributes:
+        cuts: Dictionary storing all learned cuts on all data columns.
+    """
+    
     def __init__(self):
+        
+        """
+        Initializes the Discretezer object.
+        """
+        
         self.cuts = dict()
         
     
     def fit(self, data: pd.DataFrame, attributes: list, number_of_output_values: int, verbose=0) -> None:
+        
+        """
+        Fits discretizer, i.e. generates cuts that the discretizer object will remember.
+        
+        Params:
+            data: Information system.
+            attributes: List of attributes to discretize.
+            number_of_output_value: The number of values the attribute can has after discretization.
+            verbose: Mode of generating messages by the learning process.
+        
+        Raise:
+            ValueError: Number of output values must be greater than 0.
+        """
+        
+        if number_of_output_values < 1:
+            raise ValueError("Number of output values must be greater than 0.")
         
         for column in attributes:
         
@@ -26,6 +55,25 @@ class Discretizer:
             
     
     def fit_discretize(self, data: pd.DataFrame, attributes: list, number_of_output_values: int, verbose=0) -> pd.DataFrame:
+        
+        """
+        Fits discretizer and discretizes selected attributes.
+        
+        Params:
+            data: Information system.
+            attributes: List of attributes to discretize.
+            number_of_output_value: The number of values the attribute can has after discretization.
+            verbose: Mode of generating messages by the learning process.
+            
+        Return:
+            DataFrame: Discretized data.
+        
+        Raise:
+            ValueError: Number of output values must be greater than 0.
+        """
+        
+        if number_of_output_values < 1:
+            raise ValueError("Number of output values must be greater than 0.")
         
         my_data = data.copy()
         
@@ -65,6 +113,17 @@ class Discretizer:
     # --------------------------------------------------------------------
     
     def discretize(self, data: pd.DataFrame, attributes: list) -> pd.DataFrame:
+        
+        """
+        Discretizes selected attributes.
+        
+        Params:
+            data: Information system.
+            attributes: List of attributes to discretize.
+            
+        Return:
+            DataFrame: Discretized data.
+        """
         
         my_data = data.copy()
         

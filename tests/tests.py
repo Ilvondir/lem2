@@ -1,5 +1,8 @@
-from lem2 import *
 import pandas as pd
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from lem2 import *
 
 data = pd.DataFrame({
     "a": [0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
