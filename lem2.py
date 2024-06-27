@@ -2,8 +2,20 @@ import pandas as pd
 import sys
 
 class LEM2:
+    """
+    LEM2 is a class representing a rule-based inference classifier that implements the LEM2 algorithm.
+    
+    Attributes:
+        rules: List of all inference rules.
+        label_counts_ranking: Class ranking based on the frequency of class occurrence in the training data.
+    """
     
     def __init__(self) -> None:
+        
+        """
+        Initializes the LEM2 object.
+        """
+        
         self.rules = []
         self.label_counts_ranking = []
 
@@ -335,10 +347,11 @@ class LEM2:
     # -------------------------------------------------------------------
 
     def print_rules(self) -> None:
+    
+        """
+        Prints all inference rules fitted by the algorithm.
+        """
         
-        """
-        Printing all inference rules fitted by the algorithm.
-        """
         counter = 1
         for rule in self.rules:
             print(f"{counter}) ", end="")
@@ -358,7 +371,7 @@ class LEM2:
     def fit(self, data: pd.DataFrame, labels: list, only_certain=True, verbose=1) -> list:
         
         """
-        The learning process, i.e. generating minimal coverage of rules for each decision class.
+        Learns classifier object, i.e. generates rules.
         
         Params:
             data: Information system.
@@ -423,7 +436,7 @@ class LEM2:
     def predict_object_class(self, object: dict, rules: list, verbose=1):
         
         """
-        Predict a class on the selected object. In case of conflict, it selects the first decision class found.
+        Predicts a class on the selected object. In case of conflict, it selects the first decision class found.
         
         Params:
             object: Object passed as a dictionary that must contain all fields from the training set.
