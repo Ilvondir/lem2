@@ -88,16 +88,20 @@
 
                             <dl>
                                 <dt><a name="Discretizer-discretize"><strong>discretize</strong></a>(self, data:
-                                    pandas.core.frame.DataFrame, attributes: list) -&gt; pandas.core.frame.DataFrame
-                                </dt>
+                                    pandas.core.frame.DataFrame, verbose=0) -&gt; pandas.core.frame.DataFrame</dt>
                                 <dd><span class="code">Discretizes&nbsp;selected&nbsp;attributes.<br>
                                         &nbsp;<br>
                                         Params:<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;attributes:&nbsp;List&nbsp;of&nbsp;attributes&nbsp;to&nbsp;discretize.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         Return:<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;DataFrame:&nbsp;Discretized&nbsp;data.</span></dd>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;DataFrame:&nbsp;Discretized&nbsp;data.<br>
+                                        &nbsp;<br>
+                                        Raise:<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;RuntimeError:&nbsp;<a
+                                            href="#Discretizer">Discretizer</a>&nbsp;must&nbsp;be&nbsp;fitted&nbsp;before&nbsp;discretize.</span>
+                                </dd>
                             </dl>
 
                             <dl>

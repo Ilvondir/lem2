@@ -78,58 +78,40 @@ class Discretizer:
         
         my_data = data.copy()
         
-        for column in attributes:
+        self.fit(my_data, attributes, number_of_output_values, verbose)
         
-            min_value = min(data[column])
-            max_value = max(data[column])
-            
-            step = (max_value - min_value) / number_of_output_values
-            cuts = []
-        
-            
-            for i in range(number_of_output_values):
-                cuts.append(min_value + step*i)
-            cuts.append(max_value)
-                
-            self.cuts[column] = cuts
-                        
-            new_values = []
-            
-            for i in data.index:
-                is_discretized = False
-                
-                for j in range(number_of_output_values):
-                    if cuts[j] <= data[column][i] < cuts[j+1]:
-                        new_values.append(f"{cuts[j]}-{cuts[j+1]}")
-                        is_discretized = True
-                        break
-                        
-                if not is_discretized and data[column][i] == self.cuts[column][-1]: new_values.append(f"{cuts[j]}-{cuts[j+1]}")
-                    
-            my_data[column] = new_values
-            
-        if verbose > 0: print(f"\nAll learned cuts: {self.cuts}\n")
-                    
-        return my_data
+        return self.discretize(my_data, verbose=verbose)
     
     # --------------------------------------------------------------------
     
-    def discretize(self, data: pd.DataFrame, attributes: list) -> pd.DataFrame:
+    def discretize(self, data: pd.DataFrame, verbose=0) -> pd.DataFrame:
         
         """
         Discretizes selected attributes.
         
         Params:
             data: Information system.
-            attributes: List of attributes to discretize.
+            verbose: Mode of generating messages by the learning process.
             
         Return:
             DataFrame: Discretized data.
+        
+        Raise:
+            RuntimeError: Discretizer must be fitted before discretize.
         """
+        
+        if len(self.cuts) == 0: raise RuntimeError("Discretizer must be fitted before discretize.")
         
         my_data = data.copy()
         
-        for column in attributes:
+        attributes_to_discretize = []        
+        for column in my_data.columns:
+            if column in self.cuts:
+                attributes_to_discretize.append(column)
+                
+        if verbose > 0: print(f"Attributes to discretize: {attributes_to_discretize}")
+        
+        for column in attributes_to_discretize:
         
             new_values = []
             

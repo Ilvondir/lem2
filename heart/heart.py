@@ -11,6 +11,8 @@ data = pd.read_csv('heart.csv')
 labels = data['target']
 data = data.drop('target', axis=1)
 
+print(f"Data shape: {data.shape}")
+
 # print("Describe:")
 # print(data.describe().transpose())
 
@@ -26,14 +28,14 @@ data = data.drop('target', axis=1)
     
 
 data['label'] = labels
-test_data = data.sample(n=200).reset_index(drop=True)
+test_data = data.sample(n=250).reset_index(drop=True)
 train_data = data.drop(test_data.index).reset_index(drop=True)
 
 discretizer = Discretizer()
-discretizer.fit(train_data, ['trestbps', 'chol','thalach', 'oldpeak'], 3, verbose=1)
+discretizer.fit(train_data, ['trestbps', 'chol','thalach', 'oldpeak'], 4, verbose=1)
 
-test_data = discretizer.discretize(test_data, ['trestbps', 'chol','thalach', 'oldpeak'])
-train_data = discretizer.discretize(train_data, ['trestbps', 'chol','thalach', 'oldpeak'])
+test_data = discretizer.discretize(test_data)
+train_data = discretizer.discretize(train_data)
 
 # print(train_data['label'].value_counts())
 

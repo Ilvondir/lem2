@@ -32,7 +32,8 @@
                     <tr>
                         <td class="multicolumn"><a href="pandas.html">pandas</a><br>
                         </td>
-                        <td class="multicolumn"></td>
+                        <td class="multicolumn"><a href="sys.html">sys</a><br>
+                        </td>
                         <td class="multicolumn"></td>
                         <td class="multicolumn"></td>
                     </tr>
@@ -72,16 +73,22 @@
                         <td class="decor title-decor" colspan=2><span class="code"><a
                                     href="#LEM2">LEM2</a>()&nbsp;-&amp;gt;&nbsp;None<br>
                                 &nbsp;<br>
-                                <br>&nbsp;</span></td>
+                                <a
+                                    href="#LEM2">LEM2</a>&nbsp;is&nbsp;a&nbsp;class&nbsp;representing&nbsp;a&nbsp;rule-based&nbsp;inference&nbsp;classifier&nbsp;that&nbsp;implements&nbsp;the&nbsp;<a
+                                    href="#LEM2">LEM2</a>&nbsp;algorithm.<br>
+                                &nbsp;<br>
+                                Attributes:<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;rules:&nbsp;List&nbsp;of&nbsp;all&nbsp;inference&nbsp;rules.<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;label_counts_ranking:&nbsp;Class&nbsp;ranking&nbsp;based&nbsp;on&nbsp;the&nbsp;frequency&nbsp;of&nbsp;class&nbsp;occurrence&nbsp;in&nbsp;the&nbsp;training&nbsp;data.<br>&nbsp;</span>
+                        </td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
                         <td class="singlecolumn">Methods defined here:<br>
                             <dl>
                                 <dt><a name="LEM2-__init__"><strong>__init__</strong></a>(self) -&gt; None</dt>
-                                <dd><span
-                                        class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span>
-                                </dd>
+                                <dd><span class="code">Initializes&nbsp;the&nbsp;<a href="#LEM2">LEM2</a>&nbsp;<a
+                                            href="builtins.html#object">object</a>.</span></dd>
                             </dl>
 
                             <dl>
@@ -123,8 +130,8 @@
                             <dl>
                                 <dt><a name="LEM2-fit"><strong>fit</strong></a>(self, data: pandas.core.frame.DataFrame,
                                     labels: list, only_certain=True, verbose=1) -&gt; list</dt>
-                                <dd><span
-                                        class="code">The&nbsp;learning&nbsp;process,&nbsp;i.e.&nbsp;generating&nbsp;minimal&nbsp;coverage&nbsp;of&nbsp;rules&nbsp;for&nbsp;each&nbsp;decision&nbsp;class.<br>
+                                <dd><span class="code">Learns&nbsp;classifier&nbsp;<a
+                                            href="builtins.html#object">object</a>,&nbsp;i.e.&nbsp;generates&nbsp;rules.<br>
                                         &nbsp;<br>
                                         Params:<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
@@ -211,7 +218,7 @@
                             <dl>
                                 <dt><a name="LEM2-predict_object_class"><strong>predict_object_class</strong></a>(self,
                                     object: dict, rules: list, verbose=1)</dt>
-                                <dd><span class="code">Predict&nbsp;a&nbsp;class&nbsp;on&nbsp;the&nbsp;selected&nbsp;<a
+                                <dd><span class="code">Predicts&nbsp;a&nbsp;class&nbsp;on&nbsp;the&nbsp;selected&nbsp;<a
                                             href="builtins.html#object">object</a>.&nbsp;In&nbsp;case&nbsp;of&nbsp;conflict,&nbsp;it&nbsp;selects&nbsp;the&nbsp;first&nbsp;decision&nbsp;class&nbsp;found.<br>
                                         &nbsp;<br>
                                         Params:<br>
@@ -229,7 +236,7 @@
                             <dl>
                                 <dt><a name="LEM2-print_rules"><strong>print_rules</strong></a>(self) -&gt; None</dt>
                                 <dd><span
-                                        class="code">Printing&nbsp;all&nbsp;inference&nbsp;rules&nbsp;fitted&nbsp;by&nbsp;the&nbsp;algorithm.</span>
+                                        class="code">Prints&nbsp;all&nbsp;inference&nbsp;rules&nbsp;fitted&nbsp;by&nbsp;the&nbsp;algorithm.</span>
                                 </dd>
                             </dl>
 
