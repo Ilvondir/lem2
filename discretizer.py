@@ -55,7 +55,7 @@ class Discretizer:
         
             
     
-    def fit_discretize(self, data: pd.DataFrame, attributes: list, number_of_output_values: int, verbose=0) -> pd.DataFrame:
+    def fit_discretize(self, data: pd.DataFrame, attributes: list, number_of_output_values=5, decimal_places=5, verbose=0) -> pd.DataFrame:
         
         """
         Fits discretizer and discretizes selected attributes.
@@ -64,6 +64,7 @@ class Discretizer:
             data: Information system.
             attributes: List of attributes to discretize.
             number_of_output_value: The number of values the attribute can has after discretization.
+            decimal_places: The number of decimal places to round the results.
             verbose: Mode of generating messages by the learning process.
             
         Return:
@@ -78,19 +79,20 @@ class Discretizer:
         
         my_data = data.copy()
         
-        self.fit(my_data, attributes, number_of_output_values, verbose)
+        self.fit(my_data, attributes, number_of_output_values,verbose)
         
-        return self.discretize(my_data, verbose=verbose)
+        return self.discretize(my_data, decimal_places=decimal_places, verbose=verbose)
     
     # --------------------------------------------------------------------
     
-    def discretize(self, data: pd.DataFrame, verbose=0) -> pd.DataFrame:
+    def discretize(self, data: pd.DataFrame, decimal_places=5, verbose=0) -> pd.DataFrame:
         
         """
         Discretizes selected attributes.
         
         Params:
             data: Information system.
+            decimal_places: The number of decimal places to round the results.
             verbose: Mode of generating messages by the learning process.
             
         Return:
@@ -120,14 +122,14 @@ class Discretizer:
                 
                 for j in range(len(self.cuts[column])-1):
                     if self.cuts[column][j] <= data[column][i] < self.cuts[column][j+1]:
-                        new_values.append(f"{self.cuts[column][j]}-{self.cuts[column][j+1]}")
+                        new_values.append(f"{round(self.cuts[column][j], decimal_places)}-{round(self.cuts[column][j+1], decimal_places)}")
                         is_discretized = True
                         break
                         
                 if not is_discretized:
-                    if data[column][i] == self.cuts[column][-1]: new_values.append(f"{self.cuts[column][j]}-{self.cuts[column][j+1]}")
-                    if data[column][i] < self.cuts[column][0]: new_values.append(f"<{self.cuts[column][0]}")
-                    if data[column][i] > self.cuts[column][-1]: new_values.append(f">{self.cuts[column][-1]}")
+                    if data[column][i] == self.cuts[column][-1]: new_values.append(f"{round(self.cuts[column][j], decimal_places)}-{round(self.cuts[column][j+1], decimal_places)}")
+                    if data[column][i] < self.cuts[column][0]: new_values.append(f"<{round(self.cuts[column][0], decimal_places)}")
+                    if data[column][i] > self.cuts[column][-1]: new_values.append(f">{round(self.cuts[column][-1], decimal_places)}")
         
             my_data[column] = new_values
                     

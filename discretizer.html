@@ -88,11 +88,13 @@
 
                             <dl>
                                 <dt><a name="Discretizer-discretize"><strong>discretize</strong></a>(self, data:
-                                    pandas.core.frame.DataFrame, verbose=0) -&gt; pandas.core.frame.DataFrame</dt>
+                                    pandas.core.frame.DataFrame, decimal_places=5, verbose=0) -&gt;
+                                    pandas.core.frame.DataFrame</dt>
                                 <dd><span class="code">Discretizes&nbsp;selected&nbsp;attributes.<br>
                                         &nbsp;<br>
                                         Params:<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;decimal_places:&nbsp;The&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places&nbsp;to&nbsp;round&nbsp;the&nbsp;results.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         Return:<br>
@@ -125,8 +127,8 @@
 
                             <dl>
                                 <dt><a name="Discretizer-fit_discretize"><strong>fit_discretize</strong></a>(self, data:
-                                    pandas.core.frame.DataFrame, attributes: list, number_of_output_values: int,
-                                    verbose=0) -&gt; pandas.core.frame.DataFrame</dt>
+                                    pandas.core.frame.DataFrame, attributes: list, number_of_output_values=5,
+                                    decimal_places=5, verbose=0) -&gt; pandas.core.frame.DataFrame</dt>
                                 <dd><span
                                         class="code">Fits&nbsp;discretizer&nbsp;and&nbsp;discretizes&nbsp;selected&nbsp;attributes.<br>
                                         &nbsp;<br>
@@ -134,6 +136,7 @@
                                         &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;attributes:&nbsp;List&nbsp;of&nbsp;attributes&nbsp;to&nbsp;discretize.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;number_of_output_value:&nbsp;The&nbsp;number&nbsp;of&nbsp;values&nbsp;the&nbsp;attribute&nbsp;can&nbsp;has&nbsp;after&nbsp;discretization.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;decimal_places:&nbsp;The&nbsp;number&nbsp;of&nbsp;decimal&nbsp;places&nbsp;to&nbsp;round&nbsp;the&nbsp;results.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;<br>
                                         Return:<br>

@@ -542,7 +542,7 @@ class LEM2:
             if verbose == 2: print(f"\t{i+1}/{len(data)} classes predicted")
             
         
-        if verbose > 0: print(f"During the prediction, {conflicts_counter} conflicts occurred.")
+        if verbose > 0: print(f"\nDuring the prediction, {conflicts_counter} conflicts occurred.")
         if verbose > 0: print(f"The prediction process included {none_counter} objects whose class could not be predicted.")
         
         if verbose == 2: print(f"All predicted classes: {classes}")

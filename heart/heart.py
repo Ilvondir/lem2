@@ -28,8 +28,9 @@ print(f"Data shape: {data.shape}")
     
 
 data['label'] = labels
-test_data = data.sample(n=250).reset_index(drop=True)
+test_data = data.sample(n=250)
 train_data = data.drop(test_data.index).reset_index(drop=True)
+test_data = test_data.reset_index(drop=True)
 
 discretizer = Discretizer()
 discretizer.fit(train_data, ['trestbps', 'chol','thalach', 'oldpeak'], 4, verbose=1)
@@ -39,7 +40,7 @@ train_data = discretizer.discretize(train_data)
 
 # print(train_data['label'].value_counts())
 
-# # # Classifier
+# Classifier
 lem2_classifier = LEM2()
 lem2_classifier.fit(train_data.drop('label', axis=1), train_data['label'], only_certain=False)
 
