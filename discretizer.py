@@ -46,9 +46,8 @@ class Discretizer:
             cuts = []
         
             
-            for i in range(number_of_output_values):
+            for i in range(1, number_of_output_values):
                 cuts.append(min_value + step*i)
-            cuts.append(max_value)
                 
             self.cuts[column] = cuts
             
