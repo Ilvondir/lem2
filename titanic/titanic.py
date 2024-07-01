@@ -8,13 +8,9 @@ from discretizer import Discretizer
 from lem2 import *
 
 data = pd.read_csv("./titanic.csv")
-
-complete_data = data.dropna().reset_index(drop=True)
-semantic_data = complete_data.drop(['name', 'ticketno'], axis=1)
+semantic_data = data.drop(['name', 'ticketno'], axis=1)
     
 # To discretize: ['age', 'fare']
-    
-    
 test_data = semantic_data.sample(n=200)
 train_data = semantic_data.drop(test_data.index).reset_index(drop=True)
 test_data = test_data.reset_index(drop=True)

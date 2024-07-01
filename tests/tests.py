@@ -24,16 +24,17 @@ data = pd.DataFrame({
 #     "b": [0, 1],
 #     "label": [1, 0],
 # }, dtype=int)
-
-lem2 = LEM2()
-lem2.fit(data.drop('label', axis=1), data['label'], only_certain=False)
-# lem2.evaluate(data.drop('label', axis=1), data['label'])
-data['preds'] = lem2.predict(data, verbose=2)
-
 print(data)
 
+lem2 = LEM2()
+lem2.fit(data.drop('label', axis=1), data['label'], only_certain=False, verbose=1)
 
-# lem2.print_rules()
+# data['preds'] = lem2.predict(data, verbose=2)
+
+# print(data)
+
+
+lem2.print_rules()
 
 # lem2.evaluate(data.drop('label', axis=1), data['label'])
 

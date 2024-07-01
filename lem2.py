@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import sys
 
 class LEM2:
@@ -21,7 +22,7 @@ class LEM2:
 
     # -------------------------------------------------------------------
 
-    def check_list_of_descriptors_is_enough(self, data: pd.DataFrame, T: list, B:list ) -> bool:
+    def _check_list_of_descriptors_is_enough(self, data: pd.DataFrame, T: list, B:list ) -> bool:
         
         """
         Checks whether the list of descriptors is sufficient (certain or uncertain) on the data set and the selected decision class approximation.
@@ -52,7 +53,7 @@ class LEM2:
 
     # -------------------------------------------------------------------
 
-    def objects_recognized_by_rule(self, data: pd.DataFrame, rule: list) -> list:
+    def _objects_recognized_by_rule(self, data: pd.DataFrame, rule: list) -> list:
         
         """
         Returns a list of indexes of objects recognized by a given rule from the information system.
@@ -81,7 +82,7 @@ class LEM2:
             
     # -------------------------------------------------------------------
 
-    def minimalize_rule(self, data: pd.DataFrame, rule: list, B: list) -> list:
+    def _minimalize_rule(self, data: pd.DataFrame, rule: list, B: list) -> list:
         
         """
         Minimizes the rule by removing unnecessary descriptors.
@@ -107,7 +108,7 @@ class LEM2:
         for descriptor in rule:
             temp.remove(descriptor)
             
-            verdict = self.check_list_of_descriptors_is_enough(data, temp, B)
+            verdict = self._check_list_of_descriptors_is_enough(data, temp, B)
             
             if verdict: filter_for_rule.append(False)
             else: filter_for_rule.append(True)
@@ -118,7 +119,7 @@ class LEM2:
 
     # -------------------------------------------------------------------
 
-    def label_coverage(self, data: pd.DataFrame, labels: list, label_to_coverage, only_certain=True, verbose=1) -> list:
+    def _label_coverage(self, data: pd.DataFrame, labels: list, label_to_coverage, only_certain=True, verbose=1) -> list:
         
         """
         Generates minimum coverage of the selected decision class using simple and minimal rules.
@@ -140,6 +141,9 @@ class LEM2:
         
         if len(data) != len(labels):
             raise ValueError("Data and labels must have same length.")
+        
+        data = data.replace({np.nan: "None"})
+        data = data.replace({None: "None"})
 
         # Remove nonunique rows with decisions
         data['label'] = labels
@@ -182,7 +186,7 @@ class LEM2:
         T = []
         
         while len(G) != 0:
-            
+                       
             if verbose == 2: print(f"Iteration #{counter}")
             
             descriptors = []
@@ -236,12 +240,12 @@ class LEM2:
             if verbose == 2: print(f"T = {T}")
             
             # Check is rule enough?
-            if verbose == 2:  print(f"Is rule enough? {self.check_list_of_descriptors_is_enough(data, T, B)}")
+            if verbose == 2:  print(f"Is rule enough? {self._check_list_of_descriptors_is_enough(data, T, B)}")
             
-            if self.check_list_of_descriptors_is_enough(data, T, B):
+            if self._check_list_of_descriptors_is_enough(data, T, B):
                 
                 # Minimalize enough rule
-                T = self.minimalize_rule(data, T, B)
+                T = self._minimalize_rule(data, T, B)
                 
                 if verbose == 2: print(f"Rule after minimalization: {T}")
                 
@@ -299,7 +303,7 @@ class LEM2:
             if verbose == 2: print()
             
         # Remove unnecessary rules
-        self.remove_unnecessary_rules(data, rules)
+        self._remove_unnecessary_rules(data, rules)
         
         if verbose > 0: print(f"Coveraged in {counter} iterations")
                         
@@ -308,7 +312,7 @@ class LEM2:
                     
     # -------------------------------------------------------------------
 
-    def remove_unnecessary_rules(self, data: pd.DataFrame, rules: list) -> list:
+    def _remove_unnecessary_rules(self, data: pd.DataFrame, rules: list) -> list:
         
         """
         Removes unnecessary rules.
@@ -322,7 +326,7 @@ class LEM2:
         """
         
         coveraged_objects = []
-        for rule in rules: coveraged_objects.append(self.objects_recognized_by_rule(data, rule))
+        for rule in rules: coveraged_objects.append(self._objects_recognized_by_rule(data, rule))
         filter_for_rules = []
         
         for rule_coverage in coveraged_objects:
@@ -389,6 +393,9 @@ class LEM2:
         if len(data) != len(labels):
             raise ValueError("Data and labels must have same length.")
         
+        data = data.replace({np.nan: "None"})
+        data = data.replace({None: "None"})
+        
         all_labels = labels.unique()
         
         labels_with_counts = dict()
@@ -419,7 +426,7 @@ class LEM2:
                 sys.stdout.flush()
 
                 
-            rule_for_label = self.label_coverage(data, labels, label_to_coverage=all_labels[index], only_certain=only_certain, verbose=verbose)
+            rule_for_label = self._label_coverage(data, labels, label_to_coverage=all_labels[index], only_certain=only_certain, verbose=verbose)
             rules.extend(rule_for_label)
             
             
@@ -433,7 +440,7 @@ class LEM2:
     
     # -------------------------------------------------------------------
     
-    def predict_object_class(self, object: dict, rules: list, verbose=1):
+    def _predict_object_class(self, object: dict, rules: list, verbose=1):
         
         """
         Predicts a class on the selected object. In case of conflict, it selects the first decision class found.
@@ -444,8 +451,9 @@ class LEM2:
             verbose: Mode of generating messages by the predicting process.
             
         Return:
-            Decision class or None if no match is found.
+            Decision class or first label from ranking if no match is found.
             bool: Flag indicating that a conflict occurred while predicting the class for this object.
+            bool: A flag indicating that the class for this object could not be predicted.
         """
         
         predicted_classes = []
@@ -464,8 +472,8 @@ class LEM2:
         
         # If no rules return None
         if len(predicted_classes) == 0: 
-            if verbose == 2: print(f"Class for {object}: {None}")
-            return None, False
+            if verbose == 2: print(f"Class for {object}: {self.label_counts_ranking[0]}")
+            return self.label_counts_ranking[0], False, True
         
         # Search most common decision  
         set_of_classes = set(predicted_classes)
@@ -491,7 +499,7 @@ class LEM2:
                     
                     if verbose == 2: print(f"Class for {object}: {list(set_of_classes)[i]}")
                     
-                    return list(set_of_classes)[i], is_conflict
+                    return list(set_of_classes)[i], is_conflict, False
                 
             if is_conflict:
                 if max_count == counts[i]:
@@ -509,7 +517,7 @@ class LEM2:
                 
                 if verbose == 2: print(f"Class for {object}: {conflicted_classes[i]}")
                     
-                return conflicted_classes[i], is_conflict
+                return conflicted_classes[i], is_conflict, False
         
     # -------------------------------------------------------------------
     
@@ -525,25 +533,28 @@ class LEM2:
         Return:
             list: List of predicted classes.
         """
+        
+        data = data.replace({np.nan: "None"})
+        data = data.replace({None: "None"})
             
         classes = []
         conflicts_counter = 0
-        none_counter = 0
+        non_predicted_counter = 0
         
         if verbose == 2: print(f"Objects to predict: {len(data)}")
         
         for i in range(len(data)):
-            predict_class, is_conflict = self.predict_object_class(data.iloc[i].to_dict(), self.rules, verbose=verbose)
+            predict_class, is_conflict, is_not_predicted = self._predict_object_class(data.iloc[i].to_dict(), self.rules, verbose=verbose)
             classes.append(predict_class)
             
             if is_conflict: conflicts_counter += 1
-            if predict_class == None: none_counter += 1
+            if is_not_predicted: non_predicted_counter += 1
             
             if verbose == 2: print(f"\t{i+1}/{len(data)} classes predicted")
             
         
         if verbose > 0: print(f"\nDuring the prediction, {conflicts_counter} conflicts occurred.")
-        if verbose > 0: print(f"The prediction process included {none_counter} objects whose class could not be predicted.")
+        if verbose > 0: print(f"The prediction process included {non_predicted_counter} objects whose class could not be predicted.")
         
         if verbose == 2: print(f"All predicted classes: {classes}")
         

@@ -33,12 +33,10 @@ train_data = data.drop(test_data.index).reset_index(drop=True)
 test_data = test_data.reset_index(drop=True)
 
 discretizer = Discretizer()
-discretizer.fit(train_data, ['trestbps', 'chol','thalach', 'oldpeak'], 4, verbose=1)
+discretizer.fit(train_data, ['trestbps', 'chol','thalach', 'oldpeak'], number_of_output_values=3, verbose=1)
 
 test_data = discretizer.discretize(test_data)
 train_data = discretizer.discretize(train_data)
-
-# print(train_data['label'].value_counts())
 
 # Classifier
 lem2_classifier = LEM2()
@@ -48,7 +46,6 @@ lem2_classifier.fit(train_data.drop('label', axis=1), train_data['label'], only_
 
 print("\n\nTrain data: ")
 lem2_classifier.evaluate(train_data.drop('label', axis=1), train_data['label'])
-# train_data['preds'] = lem2_classifier.predict(train_data.drop('label', axis=1), verbose=0)
 
 print("\n\nTest data: ")
 lem2_classifier.evaluate(test_data.drop('label', axis=1), test_data['label'])
