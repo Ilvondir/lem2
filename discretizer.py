@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 class Discretizer:
     
@@ -120,6 +121,9 @@ class Discretizer:
             for i in data.index:
                 is_discretized = False
                 
+                if np.isnan(data[column][i]):
+                    new_values.append(None)
+                                
                 for j in range(len(self.cuts[column])-1):
                     if self.cuts[column][j] <= data[column][i] < self.cuts[column][j+1]:
                         new_values.append(f"{round(self.cuts[column][j], decimal_places)}-{round(self.cuts[column][j+1], decimal_places)}")
@@ -130,7 +134,7 @@ class Discretizer:
                     if data[column][i] == self.cuts[column][-1]: new_values.append(f"{round(self.cuts[column][j], decimal_places)}-{round(self.cuts[column][j+1], decimal_places)}")
                     if data[column][i] < self.cuts[column][0]: new_values.append(f"<{round(self.cuts[column][0], decimal_places)}")
                     if data[column][i] > self.cuts[column][-1]: new_values.append(f">{round(self.cuts[column][-1], decimal_places)}")
-        
+                  
             my_data[column] = new_values
                     
         return my_data
