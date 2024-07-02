@@ -15,10 +15,13 @@ print(f"train_data.shape: {train_data.shape}")
 print(f"test_data.shape: {test_data.shape}")
 
 disc = Discretizer()
-disc.fit(train_data, ["Age", "Fare"], number_of_output_values=4)
+disc.fit(train_data, ['age'], number_of_output_values=4, distance_from_extreme_values=20)
+disc.fit(train_data, ['fare'], number_of_output_values=8, distance_from_extreme_values=200, verbose=1)
 
 train_data = disc.discretize(train_data)
 test_data = disc.discretize(test_data)
+
+print(train_data)
 
 lem2 = LEM2()
 lem2.fit(train_data.drop(["Survived"], axis=1), train_data["Survived"], only_certain=False, verbose=1)

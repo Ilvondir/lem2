@@ -91,7 +91,8 @@
                                 <dt><a name="Discretizer-discretize"><strong>discretize</strong></a>(self, data:
                                     pandas.core.frame.DataFrame, decimal_places=5, verbose=0) -&gt;
                                     pandas.core.frame.DataFrame</dt>
-                                <dd><span class="code">Discretizes&nbsp;selected&nbsp;attributes.<br>
+                                <dd><span
+                                        class="code">Discretizes&nbsp;selected&nbsp;attributes.&nbsp;Discretization&nbsp;returns&nbsp;string&nbsp;symbolizing&nbsp;interval.&nbsp;Original&nbsp;value&nbsp;was&nbsp;greater&nbsp;than&nbsp;or&nbsp;equal&nbsp;to&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;interval&nbsp;and&nbsp;less&nbsp;than&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;interval.<br>
                                         &nbsp;<br>
                                         Params:<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
@@ -110,7 +111,7 @@
                             <dl>
                                 <dt><a name="Discretizer-fit"><strong>fit</strong></a>(self, data:
                                     pandas.core.frame.DataFrame, attributes: list, number_of_output_values: int,
-                                    verbose=0) -&gt; None</dt>
+                                    distance_from_extreme_values=0, verbose=0) -&gt; None</dt>
                                 <dd><span
                                         class="code">Fits&nbsp;discretizer,&nbsp;i.e.&nbsp;generates&nbsp;cuts&nbsp;that&nbsp;the&nbsp;discretizer&nbsp;<a
                                             href="builtins.html#object">object</a>&nbsp;will&nbsp;remember.<br>
@@ -119,10 +120,13 @@
                                         &nbsp;&nbsp;&nbsp;&nbsp;data:&nbsp;Information&nbsp;system.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;attributes:&nbsp;List&nbsp;of&nbsp;attributes&nbsp;to&nbsp;discretize.<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;number_of_output_value:&nbsp;The&nbsp;number&nbsp;of&nbsp;values&nbsp;the&nbsp;attribute&nbsp;can&nbsp;has&nbsp;after&nbsp;discretization.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;distance_from_extreme_values:&nbsp;The&nbsp;distance&nbsp;at&nbsp;which&nbsp;we&nbsp;want&nbsp;to&nbsp;move&nbsp;the&nbsp;extreme&nbsp;cuts&nbsp;away&nbsp;from&nbsp;the&nbsp;values<br>
                                         &nbsp;&nbsp;&nbsp;&nbsp;verbose:&nbsp;Mode&nbsp;of&nbsp;generating&nbsp;messages&nbsp;by&nbsp;the&nbsp;learning&nbsp;process.<br>
                                         &nbsp;<br>
                                         Raise:<br>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;Number&nbsp;of&nbsp;output&nbsp;values&nbsp;must&nbsp;be&nbsp;greater&nbsp;than&nbsp;0.</span>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;Number&nbsp;of&nbsp;output&nbsp;values&nbsp;must&nbsp;be&nbsp;greater&nbsp;than&nbsp;1.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;Distance&nbsp;from&nbsp;extreme&nbsp;values&nbsp;must&nbsp;be&nbsp;lower&nbsp;than&nbsp;X.X.<br>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;Distance&nbsp;from&nbsp;extreme&nbsp;values&nbsp;must&nbsp;be&nbsp;greater&nbsp;or&nbsp;equal&nbsp;0.</span>
                                 </dd>
                             </dl>
 

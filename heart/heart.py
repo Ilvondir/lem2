@@ -32,11 +32,15 @@ test_data = data.sample(n=250)
 train_data = data.drop(test_data.index).reset_index(drop=True)
 test_data = test_data.reset_index(drop=True)
 
+
 discretizer = Discretizer()
-discretizer.fit(train_data, ['trestbps', 'chol','thalach', 'oldpeak'], number_of_output_values=3, verbose=1)
+discretizer.fit(train_data, ['trestbps', 'chol','thalach', 'oldpeak', 'age'], number_of_output_values=12, verbose=1)
 
 test_data = discretizer.discretize(test_data)
 train_data = discretizer.discretize(train_data)
+
+print(train_data)
+print(test_data)
 
 # Classifier
 lem2_classifier = LEM2()

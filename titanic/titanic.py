@@ -11,12 +11,13 @@ data = pd.read_csv("./titanic.csv")
 semantic_data = data.drop(['name', 'ticketno'], axis=1)
     
 # To discretize: ['age', 'fare']
-test_data = semantic_data.sample(n=200)
+test_data = semantic_data.sample(n=500)
 train_data = semantic_data.drop(test_data.index).reset_index(drop=True)
 test_data = test_data.reset_index(drop=True)
 
 discretizer = Discretizer()
-discretizer.fit(train_data, ['age', 'fare'], 5, verbose=1)
+discretizer.fit(train_data, ['age'], number_of_output_values=4, distance_from_extreme_values=20)
+discretizer.fit(train_data, ['fare'], number_of_output_values=8, distance_from_extreme_values=200, verbose=1)
 
 test_data = discretizer.discretize(test_data)
 train_data = discretizer.discretize(train_data)

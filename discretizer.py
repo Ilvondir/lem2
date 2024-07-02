@@ -19,7 +19,7 @@ class Discretizer:
         self.cuts = dict()
         
     
-    def fit(self, data: pd.DataFrame, attributes: list, number_of_output_values: int, verbose=0) -> None:
+    def fit(self, data: pd.DataFrame, attributes: list, number_of_output_values: int, distance_from_extreme_values=0, verbose=0) -> None:
         
         """
         Fits discretizer, i.e. generates cuts that the discretizer object will remember.
@@ -28,26 +28,44 @@ class Discretizer:
             data: Information system.
             attributes: List of attributes to discretize.
             number_of_output_value: The number of values the attribute can has after discretization.
+            distance_from_extreme_values: The distance at which we want to move the extreme cuts away from the values
             verbose: Mode of generating messages by the learning process.
         
         Raise:
-            ValueError: Number of output values must be greater than 0.
+            ValueError: Number of output values must be greater than 1.
+            ValueError: Distance from extreme values must be lower than X.X.
+            ValueError: Distance from extreme values must be greater or equal 0.
         """
         
-        if number_of_output_values < 1:
-            raise ValueError("Number of output values must be greater than 0.")
+        if distance_from_extreme_values < 0:
+                raise ValueError(f"Distance from extreme values must be greater or equal 0.")
+        
+        if number_of_output_values <= 1:
+            raise ValueError("Number of output values must be greater than 1.")
         
         for column in attributes:
         
             min_value = min(data[column])
             max_value = max(data[column])
             
-            step = (max_value - min_value) / number_of_output_values
             cuts = []
+            
+            if distance_from_extreme_values >= (max_value - min_value) / 2:
+                raise ValueError(f"Distance from extreme values must be lower than {(max_value - min_value) / 2}.")
         
             
-            for i in range(1, number_of_output_values):
-                cuts.append(min_value + step*i)
+            start = min_value + distance_from_extreme_values
+            end = max_value - distance_from_extreme_values
+            
+            if number_of_output_values > 2:
+                step = (end - start) / (number_of_output_values-2)
+                
+                for i in range(0, number_of_output_values-1):
+                    cuts.append(start + step*i)
+            
+            else:
+                cuts.append((start+end) /2)
+                
                 
             self.cuts[column] = cuts
             
@@ -88,7 +106,7 @@ class Discretizer:
     def discretize(self, data: pd.DataFrame, decimal_places=5, verbose=0) -> pd.DataFrame:
         
         """
-        Discretizes selected attributes.
+        Discretizes selected attributes. Discretization returns string symbolizing interval. Original value was greater than or equal to the beginning of the interval and less than the end of the interval.
         
         Params:
             data: Information system.
@@ -122,17 +140,21 @@ class Discretizer:
                 
                 if np.isnan(data[column][i]):
                     new_values.append(None)
-                                
-                for j in range(len(self.cuts[column])-1):
-                    if self.cuts[column][j] <= data[column][i] < self.cuts[column][j+1]:
-                        new_values.append(f"{round(self.cuts[column][j], decimal_places)}-{round(self.cuts[column][j+1], decimal_places)}")
-                        is_discretized = True
-                        break
+                    
+                if len(self.cuts[column]) > 1:    
+                    for j in range(len(self.cuts[column])-1):
+                        if self.cuts[column][j] <= data[column][i] < self.cuts[column][j+1]:
+                            new_values.append(f"{round(self.cuts[column][j], decimal_places)}-{round(self.cuts[column][j+1], decimal_places)}")
+                            is_discretized = True
+                            break
                         
                 if not is_discretized:
-                    if data[column][i] == self.cuts[column][-1]: new_values.append(f"{round(self.cuts[column][j], decimal_places)}-{round(self.cuts[column][j+1], decimal_places)}")
-                    if data[column][i] < self.cuts[column][0]: new_values.append(f"<{round(self.cuts[column][0], decimal_places)}")
-                    if data[column][i] > self.cuts[column][-1]: new_values.append(f">{round(self.cuts[column][-1], decimal_places)}")
+                    
+                    if data[column][i] < self.cuts[column][0]:
+                        new_values.append(f"<{round(self.cuts[column][0], decimal_places)}")
+                    
+                    if data[column][i] >= self.cuts[column][-1]:
+                        new_values.append(f">={round(self.cuts[column][-1], decimal_places)}")
                   
             my_data[column] = new_values
                     
