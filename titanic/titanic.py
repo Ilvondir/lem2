@@ -16,12 +16,12 @@ train_data = semantic_data.drop(test_data.index).reset_index(drop=True)
 test_data = test_data.reset_index(drop=True)
 
 discretizer = Discretizer()
-discretizer.fit(train_data, ['age'], number_of_output_values=4, distance_from_extreme_values=20)
-discretizer.fit(train_data, ['fare'], number_of_output_values=8, distance_from_extreme_values=200, verbose=1)
+discretizer.fit(train_data, ['age', 'fare'], number_of_output_values=10, distance_from_extreme_values=.1, verbose=1)
 
 test_data = discretizer.discretize(test_data)
 train_data = discretizer.discretize(train_data)
 
+print(test_data['survived'].value_counts())
 
 lem2_classifier = LEM2()
 lem2_classifier.fit(train_data.drop('survived', axis=1), labels=train_data['survived'], only_certain=False)
