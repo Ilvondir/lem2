@@ -34,7 +34,7 @@ test_data = test_data.reset_index(drop=True)
 
 
 discretizer = Discretizer()
-discretizer.fit(train_data, ['trestbps', 'chol','thalach', 'oldpeak', 'age'], number_of_output_values=12, verbose=1)
+discretizer.fit(train_data, ['trestbps', 'chol','thalach', 'oldpeak', 'age'], number_of_output_values=7, distance_from_extreme_values=0.15, verbose=1)
 
 test_data = discretizer.discretize(test_data)
 train_data = discretizer.discretize(train_data)

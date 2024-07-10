@@ -28,34 +28,36 @@ class Discretizer:
             data: Information system.
             attributes: List of attributes to discretize.
             number_of_output_value: The number of values the attribute can has after discretization.
-            distance_from_extreme_values: The distance at which we want to move the extreme cuts away from the values
+            distance_from_extreme_values: Percentage of the range by which we want to move away from the extreme data.
             verbose: Mode of generating messages by the learning process.
         
         Raise:
             ValueError: Number of output values must be greater than 1.
-            ValueError: Distance from extreme values must be lower than X.X.
-            ValueError: Distance from extreme values must be greater or equal 0.
+            ValueError: Distance from extreme values must be greater or equal 0 and lower than 0.5.
         """
         
-        if distance_from_extreme_values < 0:
-                raise ValueError(f"Distance from extreme values must be greater or equal 0.")
-        
+        if 0 > distance_from_extreme_values >= 0.5:
+            raise ValueError(f"Distance from extreme values must be greater or equal 0 and lower than 0.5.")
+            
         if number_of_output_values <= 1:
             raise ValueError("Number of output values must be greater than 1.")
+                    
         
         for column in attributes:
         
             min_value = min(data[column])
             max_value = max(data[column])
             
+            data_range = max_value - min_value
+            
+            distance = data_range * distance_from_extreme_values
+            
+            if verbose > 0: print(f"{column} range: {data_range}, distance from extreme values: {distance}")
+            
             cuts = []
-            
-            if distance_from_extreme_values >= (max_value - min_value) / 2:
-                raise ValueError(f"Distance from extreme values must be lower than {(max_value - min_value) / 2}.")
-        
-            
-            start = min_value + distance_from_extreme_values
-            end = max_value - distance_from_extreme_values
+                    
+            start = min_value + distance
+            end = max_value - distance
             
             if number_of_output_values > 2:
                 step = (end - start) / (number_of_output_values-2)
@@ -69,11 +71,11 @@ class Discretizer:
                 
             self.cuts[column] = cuts
             
-        if verbose > 0: print(f"\nAll learned cuts: {self.cuts}\n")
+        if verbose > 0: print(f"All learned cuts: {self.cuts}\n")
         
             
     
-    def fit_discretize(self, data: pd.DataFrame, attributes: list, number_of_output_values=5, decimal_places=5, verbose=0) -> pd.DataFrame:
+    def fit_discretize(self, data: pd.DataFrame, attributes: list, number_of_output_values=5, distance_from_extreme_values=0, decimal_places=5, verbose=0) -> pd.DataFrame:
         
         """
         Fits discretizer and discretizes selected attributes.
@@ -82,6 +84,7 @@ class Discretizer:
             data: Information system.
             attributes: List of attributes to discretize.
             number_of_output_value: The number of values the attribute can has after discretization.
+            distance_from_extreme_values: Percentage of the range by which we want to move away from the extreme data.
             decimal_places: The number of decimal places to round the results.
             verbose: Mode of generating messages by the learning process.
             
@@ -89,7 +92,8 @@ class Discretizer:
             DataFrame: Discretized data.
         
         Raise:
-            ValueError: Number of output values must be greater than 0.
+            ValueError: Number of output values must be greater than 1.
+            ValueError: Distance from extreme values must be greater or equal 0 and lower than 0.5.
         """
         
         if number_of_output_values < 1:
@@ -97,7 +101,7 @@ class Discretizer:
         
         my_data = data.copy()
         
-        self.fit(my_data, attributes, number_of_output_values,verbose)
+        self.fit(my_data, attributes, number_of_output_values=number_of_output_values, distance_from_extreme_values=distance_from_extreme_values, verbose=verbose)
         
         return self.discretize(my_data, decimal_places=decimal_places, verbose=verbose)
     

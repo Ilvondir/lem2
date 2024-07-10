@@ -141,19 +141,7 @@ class LEM2:
         
         if len(data) != len(labels):
             raise ValueError("Data and labels must have same length.")
-        
-        data = data.replace({np.nan: "None"})
-        data = data.replace({None: "None"})
-
-        # Remove nonunique rows with decisions
-        data['label'] = labels
-        data = data.drop_duplicates().reset_index(drop=True)
-        
-        if verbose == 2: print(f"\nOptimalized data:\n{data}")
-        
-        labels = data['label']
-        data = data.drop('label', axis=1)
-        
+              
         rules = []
 
         B = []
@@ -412,6 +400,15 @@ class LEM2:
             self.label_counts_ranking.insert(0, key)
             
         if verbose == 2: print(f"Labels ranking: {self.label_counts_ranking}")
+        
+        # Remove nonunique rows with decisions
+        data['label'] = labels
+        data = data.drop_duplicates().reset_index(drop=True)
+        
+        if verbose == 2: print(f"\nOptimalized data shape:\n{data.shape}")
+        
+        labels = data['label']
+        data = data.drop('label', axis=1)
             
         # Training process
         rules = []

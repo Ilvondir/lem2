@@ -20,7 +20,7 @@ disc = Discretizer()
 
 print(data)
 
-disc.fit(data, data.columns, 3, distance_from_extreme_values=1, verbose=1)
+disc.fit(data, data.columns, 3, distance_from_extreme_values=0.4, verbose=1)
 
 print(data2)
 print(disc.discretize(data2))
