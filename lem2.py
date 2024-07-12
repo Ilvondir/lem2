@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import sys
+import time
 
 class LEM2:
     """
@@ -96,10 +97,10 @@ class LEM2:
             list: Minimalized rule.
         """
         
-        filter_for_rule = []
-        
         if len(rule) == 1: return rule
         
+        # filter_for_rule = []
+        new_rule = []
         
         temp = rule.copy()
         
@@ -110,10 +111,12 @@ class LEM2:
             
             verdict = self._check_list_of_descriptors_is_enough(data, temp, B)
             
-            if verdict: filter_for_rule.append(False)
-            else: filter_for_rule.append(True)
+            # if verdict: filter_for_rule.append(False)
+            # else: filter_for_rule.append(True)
+            ###############
+            if not verdict: new_rule.append(descriptor)
             
-        new_rule = [rule[i] for i in range(len(rule)) if filter_for_rule[i]]
+        # new_rule = [rule[i] for i in range(len(rule)) if filter_for_rule[i]]
         
         return new_rule
 
@@ -137,17 +140,19 @@ class LEM2:
         Raise:
             ValueError: Data and labels must have same length.
         """
-    
         
         if len(data) != len(labels):
             raise ValueError("Data and labels must have same length.")
+        
+        if verbose > 0: start_time = time.time()
               
         rules = []
 
         B = []
 
         # Get objects from selected class
-        index_to_check = [index for index in range(len(data)) if labels[index] == label_to_coverage]
+        # index_to_check = [index for index in range(len(data)) if labels[index] == label_to_coverage]
+        index_to_check = labels[labels == label_to_coverage].index
 
         # Based on selected rule type define B
         if only_certain:
@@ -242,7 +247,7 @@ class LEM2:
                 T = []
                 
                 # Check object no coveraged in B
-                filter_for_B = []
+                new_G = []
                 
                 for index in B:
                     is_coverage = False
@@ -256,22 +261,20 @@ class LEM2:
                                 break
                         
                         if rule_coverage_object:
-                            filter_for_B.append(False)
                             is_coverage = True
                             break
                     
-                    if not is_coverage: filter_for_B.append(True)
+                    if not is_coverage: new_G.append(index)
                     
                 # Define G to next iteration
-                temp = [B[index] for index in range(len(B)) if filter_for_B[index]]
-                G = temp.copy()
+                G = new_G.copy()
                 
                 if verbose == 2: print(f"G after new rule: {G}")
                         
                 
             else:
                 # If rule not enough then remove from G objects that we cannot coverage now
-                filter_for_G = []
+                temp_G = []
                 
                 for index in G:
                     object_is_correct = True
@@ -279,12 +282,12 @@ class LEM2:
                     for descriptor in T:
                         if data[descriptor[0]][index] != descriptor[1]:
                             object_is_correct = False
+                            break
                     
-                    filter_for_G.append(object_is_correct)
+                    if object_is_correct: temp_G.append(index)
                     
                 # Define G to next iteration
-                temp = [G[index] for index in range(len(G)) if filter_for_G[index]]
-                G = temp.copy()
+                G = temp_G.copy()
                 if verbose == 2: print(f"New G after reduction: {G}")
                 
             counter += 1
@@ -293,7 +296,8 @@ class LEM2:
         # Remove unnecessary rules
         self._remove_unnecessary_rules(data, rules)
         
-        if verbose > 0: print(f"Coveraged in {counter} iterations")
+        if verbose > 0: print(f"Coveraged in {counter} iterations", end="")
+        if verbose > 0: print(f" ({round(time.time() - start_time, 2)} s)")
                         
         # Return rules for selected label
         return rules
@@ -331,8 +335,7 @@ class LEM2:
                         
                     has_unique_object = True
             
-            if has_unique_object: filter_for_rules.append(True)
-            else: filter_for_rules.append(False)
+            filter_for_rules.append(has_unique_object)
             
         return [rules[i] for i in range(len(rules)) if filter_for_rules[i]]
 
@@ -384,15 +387,14 @@ class LEM2:
         data = data.replace({np.nan: "None"})
         data = data.replace({None: "None"})
         
-        all_labels = labels.unique()
+        unique_labels = labels.unique()
         
         labels_with_counts = dict()
         
         
-        # Create ranking for labels (in proediction conflict will be selected most common class)
-        for label in all_labels:
-            number = list(labels).count(label)
-            labels_with_counts[label] = number
+        # Create ranking for labels (in prediction conflict will be selected most common class)
+        for label in unique_labels:
+            labels_with_counts[label] = list(labels).count(label)
             
         sorted_labels_with_counts = sorted(labels_with_counts.items(), key=lambda x: x[1])
         
@@ -416,14 +418,14 @@ class LEM2:
         if verbose > 0:
                 print(f"\nTrain process:")
         
-        for index in range(len(all_labels)):
+        for index in range(len(unique_labels)):
             
             if verbose > 0:
-                print(f"\t{index+1}/{len(all_labels)} label ({all_labels[index]})", end="\t")
+                print(f"\t{index+1}/{len(unique_labels)} label ({unique_labels[index]})", end="\t")
                 sys.stdout.flush()
 
                 
-            rule_for_label = self._label_coverage(data, labels, label_to_coverage=all_labels[index], only_certain=only_certain, verbose=verbose)
+            rule_for_label = self._label_coverage(data, labels, label_to_coverage=unique_labels[index], only_certain=only_certain, verbose=verbose)
             rules.extend(rule_for_label)
             
             
@@ -467,7 +469,7 @@ class LEM2:
             
         if verbose == 2: print(f"Classes for object {object}: {predicted_classes}")
         
-        # If no rules return None
+        # If no rules return most common rule from ranking
         if len(predicted_classes) == 0: 
             if verbose == 2: print(f"Class for {object}: {self.label_counts_ranking[0]}")
             return self.label_counts_ranking[0], False, True
@@ -509,12 +511,13 @@ class LEM2:
         
         best_position = min(positions_in_ranking)
         
-        for i in range(len(positions_in_ranking)):
-            if positions_in_ranking[i] == best_position:
-                
-                if verbose == 2: print(f"Class for {object}: {conflicted_classes[i]}")
+        index_of_best_position = positions_in_ranking.index(best_position)     
+        
+        if verbose == 2: print(f"Class for {object}: {conflicted_classes[index_of_best_position]}")
                     
-                return conflicted_classes[i], is_conflict, False
+        return conflicted_classes[index_of_best_position], is_conflict, False   
+                
+                
         
     # -------------------------------------------------------------------
     

@@ -5,6 +5,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from lem2 import LEM2
 from discretizer import Discretizer
 
+
 pd.set_option("display.max_columns", 100)
 
 train_data = pd.read_csv("train.csv").drop(["PassengerId", "Name", "Cabin"], axis=1)
@@ -26,6 +27,7 @@ print(train_data)
 
 classifier = LEM2()
 classifier.fit(train_data.drop("Transported", axis=1), train_data["Transported"], only_certain=False)
+
 classifier.evaluate(train_data, train_data["Transported"])
 
 
