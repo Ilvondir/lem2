@@ -1,6 +1,6 @@
 # LEM2
 
-The implementation of the LEM2 algorithm (Learning from Examples Module, version 2), a greedy machine learning algorithm used in classification problems. It is based on the theory of rough sets and works by generating a minimal covering of decision rules for each label in the training data.
+The implementation of the LEM2 algorithm (*Learning from Examples Module, version 2*), a greedy machine learning algorithm used in classification problems. It is based on the theory of rough sets and works by generating a minimal covering of decision rules for each label in the training data.
 
 The implementation allows the algorithm to run in various debugging modes using the `verbose` parameter. Additionally, there is an option to choose whether the algorithm should generate only certain rules or also uncertain ones, using the `only_certain` parameter.
 
