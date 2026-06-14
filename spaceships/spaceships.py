@@ -2,7 +2,7 @@ import pandas as pd
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from lem2 import LEM2
+from lem2_numpy import LEM2
 from discretizer import Discretizer
 
 
