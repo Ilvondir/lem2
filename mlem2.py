@@ -1,23 +1,18 @@
 import sys
 import time
-
 import numpy as np
 import pandas as pd
 
 
 class MLEM2:
     """
-    Rule classifier implementing the MLEM2 algorithm.
+    Rule classifier implementing the MLEM2 algorithm with dynamic 
+    boundary-point discretization.
 
     Symbolic attributes produce descriptors ``a = v``. Numerical attributes
     produce descriptors ``a < v`` and ``a >= v``, where ``v`` is the midpoint
-    between two consecutive distinct values observed during training.
-
-    Attributes:
-        rules: Induced decision rules. Every descriptor has the form
-            [attribute, operator, value, decision].
-        label_counts_ranking: Decision classes ordered by their frequency.
-        cut_points_: Cut points generated for numerical attributes.
+    between two consecutive distinct values observed during training WHERE THE
+    DECISION CLASS CHANGES.
     """
 
     _MISSING = "__MLEM2_MISSING__"
@@ -105,7 +100,8 @@ class MLEM2:
         )
         return row_groups, group_counts
 
-    def _generate_descriptors(self, data):
+    def _generate_descriptors(self, data, labels):
+        """Generuje deskryptory wykorzystując punkty graniczne (boundary points)."""
         descriptors = []
         masks = []
         self.cut_points_ = {}
@@ -115,10 +111,27 @@ class MLEM2:
             column = data[name]
 
             if name in self.numeric_attributes_:
-                values = np.sort(column.dropna().unique().astype(float))
-                if len(values) > 1:
-                    cuts = values[:-1] + (values[1:] - values[:-1]) / 2.0
-                    cuts = np.round(cuts, decimals=12)
+                # Tworzymy tymczasowy DataFrame, żeby powiązać wartość cechy z etykietą klasy
+                df_temp = pd.DataFrame({"val": column, "label": labels}).dropna()
+                
+                if len(df_temp) > 1:
+                    # Sortujemy po wartościach cechy
+                    df_temp = df_temp.sort_values(by="val")
+                    vals = df_temp["val"].to_numpy()
+                    labs = df_temp["label"].to_numpy()
+
+                    # Szukamy indeksów, gdzie zmienia się wartość ORAZ klasa decyzyjna
+                    # (Zapobiega to cięciom wewnątrz bloków tej samej klasy)
+                    val_changed = vals[:-1] != vals[1:]
+                    label_changed = labs[:-1] != labs[1:]
+                    boundary_indices = np.flatnonzero(val_changed & label_changed)
+
+                    if len(boundary_indices) > 0:
+                        # Wyliczamy punkty środkowe tylko na granicach klas
+                        cuts = vals[boundary_indices] + (vals[boundary_indices + 1] - vals[boundary_indices]) / 2.0
+                        cuts = np.unique(np.round(cuts, decimals=12))
+                    else:
+                        cuts = np.empty(0, dtype=float)
                 else:
                     cuts = np.empty(0, dtype=float)
 
@@ -306,19 +319,7 @@ class MLEM2:
         return rules
 
     def fit(self, data, labels, only_certain=True, verbose=1):
-        """
-        Induces MLEM2 decision rules.
-
-        Args:
-            data: Data frame containing condition attributes.
-            labels: Decision values.
-            only_certain: Generate rules from lower approximations when True,
-                or from upper approximations when False.
-            verbose: 0 disables messages, 1 prints progress, 2 prints details.
-
-        Returns:
-            List of induced rules.
-        """
+        """Induces MLEM2 decision rules using boundary-point discretization."""
         self._validate_lengths(data, labels)
         original_labels = pd.Series(labels, copy=False).reset_index(drop=True)
         unique_labels = pd.unique(original_labels).tolist()
@@ -343,7 +344,8 @@ class MLEM2:
         self._training_row_groups, self._training_group_counts = (
             self._create_row_groups(training_data)
         )
-        self._generate_descriptors(training_data)
+        
+        self._generate_descriptors(training_data, training_labels)
 
         if len(self._descriptors) == 0:
             raise ValueError(
@@ -388,6 +390,41 @@ class MLEM2:
         self.rules = readable_rules
         return self.rules
 
+    def predict(self, data, verbose=1):
+        data = self._prepare_prediction_data(data)
+        if len(data) == 0:
+            return []
+
+        votes = np.zeros(
+            (len(data), len(self.label_counts_ranking)), dtype=np.int32
+        )
+
+        for rule, label in self._internal_rules:
+            mask = self._prediction_rule_mask(data, rule)
+            votes[mask, self._label_to_index[label]] += 1
+
+        maximum_votes = votes.max(axis=1)
+        winning_indexes = np.argmax(votes, axis=1)
+        ranking = np.asarray(self.label_counts_ranking, dtype=object)
+        predictions = ranking[winning_indexes].tolist()
+
+        unresolved = maximum_votes == 0
+        tied = np.count_nonzero(
+            votes == maximum_votes[:, None], axis=1
+        ) > 1
+        conflict_count = int(np.count_nonzero(tied & ~unresolved))
+        unresolved_count = int(np.count_nonzero(unresolved))
+
+        if verbose > 0:
+            print(f"\nDuring the prediction, {conflict_count} conflicts occurred.")
+            print(
+                "The prediction process included "
+                f"{unresolved_count} objects whose class could not be predicted."
+            )
+            print()
+
+        return predictions
+
     def _prepare_prediction_data(self, data):
         if not self.feature_names_:
             raise RuntimeError("The classifier must be fitted before prediction.")
@@ -430,72 +467,7 @@ class MLEM2:
             mask &= self._descriptor_mask_for_data(data, descriptor_index)
         return mask
 
-    def predict(self, data, verbose=1):
-        """Predicts decision classes for objects from ``data``."""
-        data = self._prepare_prediction_data(data)
-        if len(data) == 0:
-            return []
-
-        votes = np.zeros(
-            (len(data), len(self.label_counts_ranking)), dtype=np.int32
-        )
-
-        for rule, label in self._internal_rules:
-            mask = self._prediction_rule_mask(data, rule)
-            votes[mask, self._label_to_index[label]] += 1
-
-        maximum_votes = votes.max(axis=1)
-        winning_indexes = np.argmax(votes, axis=1)
-        ranking = np.asarray(self.label_counts_ranking, dtype=object)
-        predictions = ranking[winning_indexes].tolist()
-
-        unresolved = maximum_votes == 0
-        tied = np.count_nonzero(
-            votes == maximum_votes[:, None], axis=1
-        ) > 1
-        conflict_count = int(np.count_nonzero(tied & ~unresolved))
-        unresolved_count = int(np.count_nonzero(unresolved))
-
-        if verbose > 0:
-            print(f"\nDuring the prediction, {conflict_count} conflicts occurred.")
-            print(
-                "The prediction process included "
-                f"{unresolved_count} objects whose class could not be predicted."
-            )
-            print()
-
-        return predictions
-
-    def _predict_object_class(self, object, rules=None, verbose=1):
-        """Predicts one object and returns class and diagnostic flags."""
-        data = self._prepare_prediction_data(pd.DataFrame([object]))
-        matched_labels = []
-
-        for rule, label in self._internal_rules:
-            if self._prediction_rule_mask(data, rule)[0]:
-                matched_labels.append(label)
-
-        if not matched_labels:
-            return self.label_counts_ranking[0], False, True
-
-        counts = {
-            label: matched_labels.count(label) for label in set(matched_labels)
-        }
-        maximum = max(counts.values())
-        winners = [
-            label
-            for label in self.label_counts_ranking
-            if counts.get(label) == maximum
-        ]
-
-        if verbose == 2:
-            print(f"Classes for object {object}: {matched_labels}")
-            print(f"Class for object: {winners[0]}")
-
-        return winners[0], len(winners) > 1, False
-
     def print_rules(self):
-        """Prints all induced decision rules."""
         for counter, (rule, label) in enumerate(
             self._internal_rules, start=1
         ):
@@ -510,7 +482,6 @@ class MLEM2:
             print(f"{counter}) {antecedent} => 'label={label}'")
 
     def evaluate(self, data, labels, verbose=1):
-        """Calculates classification accuracy."""
         self._validate_lengths(data, labels)
         predictions = self.predict(data, verbose=verbose)
         accuracy = float(
